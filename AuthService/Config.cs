@@ -21,7 +21,7 @@ namespace AuthService
         public static IEnumerable<ApiResource> Apis =>
             new ApiResource[]
             {
-                new ApiResource("api1", "My API #1")
+                new ApiResource("Photography.Post.API")
             };
 
 
@@ -37,7 +37,7 @@ namespace AuthService
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
 
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { "Photography.Post.API" }
                 },
                 // client credentials flow client
                 new Client
@@ -48,7 +48,7 @@ namespace AuthService
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
 
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { "Photography.Post.API" }
                 },
                 // MVC client using code flow + pkce
                 new Client
@@ -72,7 +72,7 @@ namespace AuthService
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        "Photography.Post.API"
                     }
                 },
 
@@ -96,7 +96,7 @@ namespace AuthService
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        "Photography.Post.API"
                     }
                 },
 
@@ -122,7 +122,7 @@ namespace AuthService
                     PostLogoutRedirectUris = { "http://localhost:5002/index.html" },
                     AllowedCorsOrigins = { "http://localhost:5002" },
 
-                    AllowedScopes = { "openid", "profile", "api1" }
+                    AllowedScopes = { "openid", "profile", "Photography.Post.API" }
                 }
             };
     }
