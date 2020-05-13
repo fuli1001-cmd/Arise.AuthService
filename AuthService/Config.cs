@@ -38,7 +38,13 @@ namespace AuthService
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
 
-                    AllowedScopes = { "Photography.Post.API", "Arise.FileUploadService" }
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "Photography.Post.API",
+                        "Arise.FileUploadService"
+                    }
                 },
                 // client credentials flow client
                 new Client
@@ -49,7 +55,13 @@ namespace AuthService
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
 
-                    AllowedScopes = { "Photography.Post.API", "Arise.FileUploadService" }
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "Photography.Post.API",
+                        "Arise.FileUploadService"
+                    }
                 },
                 // MVC client using code flow + pkce
                 new Client
