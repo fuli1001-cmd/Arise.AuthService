@@ -1,4 +1,5 @@
 ﻿using Arise.FileUploadService.Filters;
+using Arise.FileUploadService.Models;
 using Arise.FileUploadService.Settings;
 using Arise.FileUploadService.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -24,15 +25,15 @@ namespace Arise.FileUploadService.Controllers
     public class StreamingController : ControllerBase
     {
         private readonly ILogger<StreamingController> _logger;
-        private readonly IOptions<StreamingSettings> _streamingSettings;
+        private readonly IOptionsSnapshot<StreamingSettings> _streamingSettings;
 
-        private readonly string[] _permittedExtensions = { ".txt", ".png", ".jpeg", ".jpg", ".gif" };
+        private readonly string[] _permittedExtensions = { ".txt", ".png", ".jpeg", ".jpg", ".gif", ".zip" };
 
         // Get the default form options so that we can use them to set the default 
         // limits for request body data.
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
 
-        public StreamingController(ILogger<StreamingController> logger, IOptions<StreamingSettings> streamingSettings)
+        public StreamingController(ILogger<StreamingController> logger, IOptionsSnapshot<StreamingSettings> streamingSettings)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _streamingSettings = streamingSettings ?? throw new ArgumentNullException(nameof(streamingSettings));
@@ -42,13 +43,17 @@ namespace Arise.FileUploadService.Controllers
         [DisableFormValueModelBinding]
         public async Task<IActionResult> UploadPhysical()
         {
+            var successUploads = new List<SuccessUploadInfo>();
+            var failedUploads = new List<FailedUploadInfo>();
+
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
             {
-                ModelState.AddModelError("File",
-                    $"The request couldn't be processed (Error 1).");
+                //ModelState.AddModelError("File",
+                //    $"The request couldn't be processed (Error 1).");
                 // Log error
 
-                return BadRequest(ModelState);
+                //return BadRequest(ModelState);
+                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper(1, new string[] { "The request couldn't be processed." }));
             }
 
             var boundary = MultipartRequestHelper.GetBoundary(
@@ -72,11 +77,13 @@ namespace Arise.FileUploadService.Controllers
                     if (!MultipartRequestHelper
                         .HasFileContentDisposition(contentDisposition))
                     {
-                        ModelState.AddModelError("File",
-                            $"The request couldn't be processed (Error 2).");
+                        //ModelState.AddModelError("File",
+                        //    $"The request couldn't be processed (Error 2).");
                         // Log error
 
-                        return BadRequest(ModelState);
+                        //return BadRequest(ModelState);
+                        //return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper(2, new string[] { "The request couldn't be processed." }));
+                        failedUploads.Add(new FailedUploadInfo { Name = contentDisposition.FileName.Value, Message = "The request couldn't be processed (Error 2)." });
                     }
                     else
                     {
@@ -101,19 +108,25 @@ namespace Arise.FileUploadService.Controllers
 
                         if (!ModelState.IsValid)
                         {
-                            return BadRequest(ModelState);
+                            //return BadRequest(ModelState);
+                            failedUploads.Add(new FailedUploadInfo { Name = contentDisposition.FileName.Value, Message = ModelState?["File"]?.Errors?[0].ErrorMessage });
+                            ModelState.Clear();
                         }
-
-                        using (var targetStream = System.IO.File.Create(
-                            Path.Combine(_streamingSettings.Value.StoredFilesPath, trustedFileNameForFileStorage)))
+                        else
                         {
-                            await targetStream.WriteAsync(streamedFileContent);
+                            using (var targetStream = System.IO.File.Create(
+                                Path.Combine(_streamingSettings.Value.StoredFilesPath, trustedFileNameForFileStorage)))
+                            {
+                                await targetStream.WriteAsync(streamedFileContent);
 
-                            _logger.LogInformation(
-                                "Uploaded file '{TrustedFileNameForDisplay}' saved to " +
-                                "'{TargetFilePath}' as {TrustedFileNameForFileStorage}",
-                                trustedFileNameForDisplay, _streamingSettings.Value.StoredFilesPath,
-                                trustedFileNameForFileStorage);
+                                successUploads.Add(new SuccessUploadInfo { Name = trustedFileNameForFileStorage, ContentType = section.ContentType });
+
+                                _logger.LogInformation(
+                                    "Uploaded file '{TrustedFileNameForDisplay}' saved to " +
+                                    "'{TargetFilePath}' as {TrustedFileNameForFileStorage}",
+                                    trustedFileNameForDisplay, _streamingSettings.Value.StoredFilesPath,
+                                    trustedFileNameForFileStorage);
+                            }
                         }
                     }
                 }
@@ -123,7 +136,12 @@ namespace Arise.FileUploadService.Controllers
                 section = await reader.ReadNextSectionAsync();
             }
 
-            return Created(nameof(StreamingController), null);
+            //return Created(nameof(StreamingController), null);
+            var uploadStatus = new UploadStatus { SuccessUploads = successUploads, FailedUploads = failedUploads };
+            if (failedUploads.Count > 0)
+                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper(1, new string[] { "Upload Failed." }, uploadStatus));
+            else
+                return StatusCode((int)HttpStatusCode.Created, ResponseWrapper.CreateOkResponseWrapper(uploadStatus));
         }
     }
 }

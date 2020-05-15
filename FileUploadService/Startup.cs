@@ -40,6 +40,7 @@ namespace Arise.FileUploadService
 
             services.AddControllers(options =>
             {
+                options.Filters.Add(typeof(HttpGlobalExceptionFilter));
                 options.Filters.Add(typeof(DisableFormValueModelBindingAttribute));
             });
 
