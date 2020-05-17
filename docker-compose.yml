@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  authservice:
+    image: fuli1001/arise-authservice:latest
+    build:
+      context: .
+      dockerfile: AuthService/Dockerfile
+
+  fileuploadservice:
+    image: fuli1001/arise-fileuploadservice:latest
+    build:
+      context: .
+      dockerfile: FileUploadService/Dockerfile
+

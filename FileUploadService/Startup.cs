@@ -32,8 +32,8 @@ namespace Arise.FileUploadService
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer("Bearer", options =>
                 {
-                    options.Authority = "https://localhost:10001";
-                    options.Audience = "Arise.FileUploadService";
+                    options.Authority = Configuration["Auth:Authority"];
+                    options.Audience = Configuration["Auth:Audience"];
                 });
 
             services.Configure<StreamingSettings>(Configuration.GetSection("StreamingSettings"));

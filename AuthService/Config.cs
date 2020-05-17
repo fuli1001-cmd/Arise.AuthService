@@ -22,7 +22,9 @@ namespace AuthService
             new ApiResource[]
             {
                 new ApiResource("Photography.Post.API"),
-                new ApiResource("Arise.FileUploadService")
+                new ApiResource("Photography.User.API"),
+                new ApiResource("Arise.FileUploadService"),
+                new ApiResource("Photography.ApiGateway")
             };
 
 
@@ -43,6 +45,8 @@ namespace AuthService
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "Photography.Post.API",
+                        "Photography.User.API",
+                        "Photography.ApiGateway",
                         "Arise.FileUploadService"
                     }
                 },
@@ -60,6 +64,8 @@ namespace AuthService
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "Photography.Post.API",
+                        "Photography.User.API",
+                        "Photography.ApiGateway",
                         "Arise.FileUploadService"
                     }
                 },
@@ -86,6 +92,8 @@ namespace AuthService
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "Photography.Post.API",
+                        "Photography.User.API",
+                        "Photography.ApiGateway",
                         "Arise.FileUploadService"
                     }
                 },
@@ -111,6 +119,8 @@ namespace AuthService
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "Photography.Post.API",
+                        "Photography.User.API",
+                        "Photography.ApiGateway",
                         "Arise.FileUploadService"
                     }
                 },
@@ -137,7 +147,15 @@ namespace AuthService
                     PostLogoutRedirectUris = { "http://localhost:5002/index.html" },
                     AllowedCorsOrigins = { "http://localhost:5002" },
 
-                    AllowedScopes = { "openid", "profile", "Photography.Post.API", "Arise.FileUploadService" }
+                    AllowedScopes = 
+                    { 
+                        "openid", 
+                        "profile", 
+                        "Photography.Post.API", 
+                        "Photography.User.API",
+                        "Photography.ApiGateway",
+                        "Arise.FileUploadService" 
+                    }
                 }
             };
     }
