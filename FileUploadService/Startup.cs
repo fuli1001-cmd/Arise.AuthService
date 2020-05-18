@@ -34,6 +34,7 @@ namespace Arise.FileUploadService
                 {
                     options.Authority = Configuration["Auth:Authority"];
                     options.Audience = Configuration["Auth:Audience"];
+                    options.RequireHttpsMetadata = false;
                 });
 
             services.Configure<StreamingSettings>(Configuration.GetSection("StreamingSettings"));
@@ -70,7 +71,7 @@ namespace Arise.FileUploadService
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

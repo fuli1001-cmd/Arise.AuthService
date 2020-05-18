@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>9d205a7d-2103-4b0c-84a0-eae5b5bee636</ProjectGuid>
+    <ProjectGuid>1b6e109c-6be2-45da-a909-b74dc9e243d3</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>authservice</DockerServiceName>

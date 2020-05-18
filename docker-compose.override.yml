@@ -3,19 +3,19 @@ version: '3.4'
 services:
   authservice:
     environment:
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=10001
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__AuthConnection=Server=47.108.194.52;Database=Arise.Auth;User Id=fuli;Password=fl511304;
     ports:
-      - "10000:80"
-      - "10001:443"
+      - "5105:80"
+
   fileuploadservice:
     environment:
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=54301
-      - Auth__Authority=authservice
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - Auth__Authority=http://192.168.99.100:5105
       - Auth__Audience=Arise.FileUploadService
       - StreamingSettings__FileSizeLimit=52428800
       - StreamingSettings__StoredFilesPath=upload
     ports:
       - "10010:80"
-      - "10011:443"
