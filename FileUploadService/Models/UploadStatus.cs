@@ -8,19 +8,14 @@ namespace Arise.FileUploadService.Models
 {
     public class UploadStatus
     {
-        public List<SuccessUploadInfo> SuccessUploads { get; set; }
-        public List<FailedUploadInfo> FailedUploads { get; set; }
+        public List<UploadInfo> SuccessUploads { get; set; }
+        public List<UploadInfo> FailedUploads { get; set; }
     }
 
-    public class SuccessUploadInfo
+    public class UploadInfo
     {
         public string Name { get; set; }
         public string ContentType { get; set; }
-    }
-
-    public class FailedUploadInfo
-    {
-        public string Name { get; set; }
-        public string Message { get; set; }
+        public int Index { get; set; }
     }
 }

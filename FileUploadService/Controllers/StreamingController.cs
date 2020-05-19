@@ -43,8 +43,9 @@ namespace Arise.FileUploadService.Controllers
         [DisableFormValueModelBinding]
         public async Task<IActionResult> UploadPhysical()
         {
-            var successUploads = new List<SuccessUploadInfo>();
-            var failedUploads = new List<FailedUploadInfo>();
+            var i = 0;
+            var successUploads = new List<UploadInfo>();
+            var failedUploads = new List<UploadInfo>();
 
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
             {
@@ -83,7 +84,7 @@ namespace Arise.FileUploadService.Controllers
 
                         //return BadRequest(ModelState);
                         //return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper(2, new string[] { "The request couldn't be processed." }));
-                        failedUploads.Add(new FailedUploadInfo { Name = contentDisposition.FileName.Value, Message = "The request couldn't be processed (Error 2)." });
+                        failedUploads.Add(new UploadInfo { Name = contentDisposition.FileName.Value, Index = i, ContentType = section.ContentType });
                     }
                     else
                     {
@@ -109,7 +110,7 @@ namespace Arise.FileUploadService.Controllers
                         if (!ModelState.IsValid)
                         {
                             //return BadRequest(ModelState);
-                            failedUploads.Add(new FailedUploadInfo { Name = contentDisposition.FileName.Value, Message = ModelState?["File"]?.Errors?[0].ErrorMessage });
+                            failedUploads.Add(new UploadInfo { Name = contentDisposition.FileName.Value, Index = i, ContentType = section.ContentType });
                             ModelState.Clear();
                         }
                         else
@@ -119,7 +120,7 @@ namespace Arise.FileUploadService.Controllers
                             {
                                 await targetStream.WriteAsync(streamedFileContent);
 
-                                successUploads.Add(new SuccessUploadInfo { Name = trustedFileNameForFileStorage, ContentType = section.ContentType });
+                                successUploads.Add(new UploadInfo { Name = trustedFileNameForFileStorage, Index = i, ContentType = section.ContentType });
 
                                 _logger.LogInformation(
                                     "Uploaded file '{TrustedFileNameForDisplay}' saved to " +
