@@ -13,9 +13,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - Auth__Authority=http://43.225.159.87:5100
-      - Auth__Audience=Arise.FileUploadService
+      - AuthSettings__Authority=http://43.225.159.87:5100
+      - AuthSettings__Audience=Arise.FileUploadService
       - StreamingSettings__FileSizeLimit=52428800
-      - StreamingSettings__StoredFilesPath=upload
+      - StreamingSettings__StoredFilesPath=./
     ports:
       - "10010:80"

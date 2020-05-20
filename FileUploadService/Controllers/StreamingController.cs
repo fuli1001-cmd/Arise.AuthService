@@ -132,6 +132,7 @@ namespace Arise.FileUploadService.Controllers
                     }
                 }
 
+                i++;
                 // Drain any remaining section body that hasn't been consumed and
                 // read the headers for the next section.
                 section = await reader.ReadNextSectionAsync();
