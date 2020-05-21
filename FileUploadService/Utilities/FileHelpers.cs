@@ -168,14 +168,14 @@ namespace Arise.FileUploadService.Utilities
                         modelState.AddModelError("File",
                         $"The file exceeds {megabyteSizeLimit:N1} MB.");
                     }
-                    else if (!IsValidFileExtensionAndSignature(
-                        contentDisposition.FileName.Value, memoryStream,
-                        permittedExtensions))
-                    {
-                        modelState.AddModelError("File",
-                            "The file type isn't permitted or the file's " +
-                            "signature doesn't match the file's extension.");
-                    }
+                    //else if (!IsValidFileExtensionAndSignature(
+                    //    contentDisposition.FileName.Value, memoryStream,
+                    //    permittedExtensions))
+                    //{
+                    //    modelState.AddModelError("File",
+                    //        "The file type isn't permitted or the file's " +
+                    //        "signature doesn't match the file's extension.");
+                    //}
                     else
                     {
                         return memoryStream.ToArray();

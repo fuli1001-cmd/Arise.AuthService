@@ -15,7 +15,6 @@ namespace Arise.FileUploadService.Models
     public class UploadInfo
     {
         public string Name { get; set; }
-        public string ContentType { get; set; }
         public int Index { get; set; }
     }
 }

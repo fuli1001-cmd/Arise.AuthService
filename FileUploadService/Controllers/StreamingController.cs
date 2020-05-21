@@ -84,15 +84,15 @@ namespace Arise.FileUploadService.Controllers
 
                         //return BadRequest(ModelState);
                         //return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper(2, new string[] { "The request couldn't be processed." }));
-                        failedUploads.Add(new UploadInfo { Name = contentDisposition.FileName.Value, Index = i, ContentType = section.ContentType });
+                        failedUploads.Add(new UploadInfo { Name = contentDisposition.FileName.Value, Index = i });
                     }
                     else
                     {
                         // Don't trust the file name sent by the client. To display
                         // the file name, HTML-encode the value.
-                        var trustedFileNameForDisplay = WebUtility.HtmlEncode(
-                                contentDisposition.FileName.Value);
-                        var trustedFileNameForFileStorage = Path.GetRandomFileName();
+                        var trustedFileNameForDisplay = WebUtility.HtmlEncode(contentDisposition.FileName.Value);
+                        //var trustedFileNameForFileStorage = Path.GetRandomFileName();
+                        var trustedFileNameForFileStorage = trustedFileNameForDisplay;
 
                         // **WARNING!**
                         // In the following example, the file is saved without
@@ -110,7 +110,7 @@ namespace Arise.FileUploadService.Controllers
                         if (!ModelState.IsValid)
                         {
                             //return BadRequest(ModelState);
-                            failedUploads.Add(new UploadInfo { Name = contentDisposition.FileName.Value, Index = i, ContentType = section.ContentType });
+                            failedUploads.Add(new UploadInfo { Name = contentDisposition.FileName.Value, Index = i });
                             ModelState.Clear();
                         }
                         else
@@ -120,7 +120,7 @@ namespace Arise.FileUploadService.Controllers
                             {
                                 await targetStream.WriteAsync(streamedFileContent);
 
-                                successUploads.Add(new UploadInfo { Name = trustedFileNameForFileStorage, Index = i, ContentType = section.ContentType });
+                                successUploads.Add(new UploadInfo { Name = trustedFileNameForFileStorage, Index = i });
 
                                 _logger.LogInformation(
                                     "Uploaded file '{TrustedFileNameForDisplay}' saved to " +
