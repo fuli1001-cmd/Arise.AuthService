@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Arise.DDD.Domain.SeedWork
@@ -7,10 +8,11 @@ namespace Arise.DDD.Domain.SeedWork
     {
         IUnitOfWork UnitOfWork { get; }
 
-        Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdAsync(Guid id);
         Task<List<T>> ListAllAsync();
         Task<List<T>> ListAsync(ISpecification<T> spec);
         T Add(T entity);
+        void Remove(T entity);
         void Update(T entity);
     }
 }

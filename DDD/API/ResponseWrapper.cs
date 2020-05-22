@@ -7,7 +7,7 @@ namespace Arise.DDD.API
     public class ResponseWrapper
     {
         public int Code { get; set; }
-        public string[] Messages { get; set; }
+        public string Message { get; set; }
         public object Data { get; set; }
 
         public static ResponseWrapper CreateOkResponseWrapper(object data)
@@ -15,14 +15,14 @@ namespace Arise.DDD.API
             return new ResponseWrapper { Data = data };
         }
 
-        public static ResponseWrapper CreateErrorResponseWrapper(int code, string[] messages)
+        public static ResponseWrapper CreateErrorResponseWrapper(int code, string message)
         {
-            return new ResponseWrapper { Code = code, Messages = messages };
+            return new ResponseWrapper { Code = code, Message = message };
         }
 
-        public static ResponseWrapper CreateErrorResponseWrapper(int code, string[] messages, object data)
+        public static ResponseWrapper CreateErrorResponseWrapper(int code, string message, object data)
         {
-            return new ResponseWrapper { Code = code, Messages = messages, Data = data };
+            return new ResponseWrapper { Code = code, Message = message, Data = data };
         }
     }
 }

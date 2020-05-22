@@ -20,7 +20,7 @@ namespace Arise.DDD.Infrastructure
             _context = context;
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(Guid id)
         {
             return await _context.Set<T>().FindAsync(id);
         }
@@ -30,6 +30,11 @@ namespace Arise.DDD.Infrastructure
             _context.Set<T>().Add(entity);
             //await _context.SaveChangesAsync();
             return entity;
+        }
+
+        public void Remove(T entity)
+        {
+            _context.Set<T>().Remove(entity);
         }
 
         public async Task<List<T>> ListAllAsync()

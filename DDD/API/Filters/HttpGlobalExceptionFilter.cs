@@ -1,5 +1,5 @@
 ﻿using Arise.DDD.API.ActionResults;
-using Arise.DDD.Domain.SeedWork.Exceptions;
+using Arise.DDD.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
