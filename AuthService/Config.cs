@@ -23,6 +23,7 @@ namespace AuthService
             {
                 new ApiResource("Photography.Post.API"),
                 new ApiResource("Photography.User.API"),
+                 new ApiResource("Photography.Order.API"),
                 new ApiResource("Arise.FileUploadService"),
                 new ApiResource("Photography.ApiGateway")
             };
@@ -46,6 +47,7 @@ namespace AuthService
                         IdentityServerConstants.StandardScopes.Profile,
                         "Photography.Post.API",
                         "Photography.User.API",
+                        "Photography.Order.API",
                         "Photography.ApiGateway",
                         "Arise.FileUploadService"
                     }
@@ -68,6 +70,7 @@ namespace AuthService
                         IdentityServerConstants.StandardScopes.Profile,
                         "Photography.Post.API",
                         "Photography.User.API",
+                        "Photography.Order.API",
                         "Photography.ApiGateway",
                         "Arise.FileUploadService"
                     }
@@ -96,6 +99,7 @@ namespace AuthService
                         IdentityServerConstants.StandardScopes.Profile,
                         "Photography.Post.API",
                         "Photography.User.API",
+                        "Photography.Order.API",
                         "Photography.ApiGateway",
                         "Arise.FileUploadService"
                     }
@@ -123,6 +127,7 @@ namespace AuthService
                         IdentityServerConstants.StandardScopes.Profile,
                         "Photography.Post.API",
                         "Photography.User.API",
+                        "Photography.Order.API",
                         "Photography.ApiGateway",
                         "Arise.FileUploadService"
                     }
@@ -156,6 +161,7 @@ namespace AuthService
                         "profile", 
                         "Photography.Post.API", 
                         "Photography.User.API",
+                        "Photography.Order.API",
                         "Photography.ApiGateway",
                         "Arise.FileUploadService" 
                     }
