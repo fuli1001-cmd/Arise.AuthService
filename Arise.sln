@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "DDD\Infra
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{1B6E109C-6BE2-45DA-A909-B74DC9E243D3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messages", "Messages", "{D2143E99-1C80-4AE2-969F-F32DDF69CAC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arise.Messages", "Messages\Arise.Messages\Arise.Messages.csproj", "{6ED005DD-9D6C-44BF-9556-1460403E38D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +51,10 @@ Global
 		{1B6E109C-6BE2-45DA-A909-B74DC9E243D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B6E109C-6BE2-45DA-A909-B74DC9E243D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B6E109C-6BE2-45DA-A909-B74DC9E243D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ED005DD-9D6C-44BF-9556-1460403E38D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ED005DD-9D6C-44BF-9556-1460403E38D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ED005DD-9D6C-44BF-9556-1460403E38D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ED005DD-9D6C-44BF-9556-1460403E38D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +63,7 @@ Global
 		{83E8EB6D-F868-44CF-AFD2-9E219E93E636} = {B213D956-6CBB-493E-A0B3-921C5CB43722}
 		{E8E9999B-38AB-4F56-A343-B28224B42B0B} = {B213D956-6CBB-493E-A0B3-921C5CB43722}
 		{19124053-A73E-41E3-B4D4-510A89F51301} = {B213D956-6CBB-493E-A0B3-921C5CB43722}
+		{6ED005DD-9D6C-44BF-9556-1460403E38D1} = {D2143E99-1C80-4AE2-969F-F32DDF69CAC7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9B77F75A-8553-41EB-BF45-77DE62ABDDF1}

@@ -36,7 +36,7 @@ namespace AuthService
 
             services.AddDefaultIdentity<ApplicationUser>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = true;
+                //options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
             })
