@@ -143,7 +143,7 @@ namespace Arise.FileUploadService.Controllers
             if (failedUploads.Count > 0)
                 return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper(1, new string[] { "Upload Failed." }, uploadStatus));
             else
-                return StatusCode((int)HttpStatusCode.Created, ResponseWrapper.CreateOkResponseWrapper(uploadStatus));
+                return Ok(ResponseWrapper.CreateOkResponseWrapper(uploadStatus));
         }
     }
 }
