@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace AuthService.Application.Commands.RegisterUserName
 {
     [DataContract]
-    public class RegisterUserNameCommand : IRequest<IdentityResult>
+    public class RegisterUserNameCommand : IRequest<bool>
     {
         [DataMember]
         [Required]

@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using AuthService.Models;
 using MediatR;
 using AuthService.Application.Commands.RegisterUserName;
+using Microsoft.OpenApi.Models;
 
 namespace AuthService
 {
@@ -67,15 +68,12 @@ namespace AuthService
             // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();
 
-            //services.AddAuthentication()
-            //    .AddGoogle(options =>
-            //    {
-            //        // register your IdentityServer with Google at https://console.developers.google.com
-            //        // enable the Google+ API
-            //        // set the redirect URI to http://localhost:5000/signin-google
-            //        options.ClientId = "copy client ID from Google here";
-            //        options.ClientSecret = "copy client secret from Google here";
-            //    });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Arise.Register API", Version = "v1" });
+                c.IncludeXmlComments(string.Format(@"{0}/AuthService.xml", System.AppDomain.CurrentDomain.BaseDirectory));
+                c.DescribeAllEnumsAsStrings();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,6 +106,16 @@ namespace AuthService
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+            });
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Arise.Register API V1");
             });
         }
     }

@@ -1,4 +1,4 @@
-﻿using Arise.DDD.Messages.Events;
+﻿using AuthService.Data;
 using AuthService.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -11,38 +11,37 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AuthService.Application.Commands.RegisterUserName
+namespace AuthService.Application.Commands.RegisterPhone
 {
-    public class RegisterUserNameCommandHandler : IRequestHandler<RegisterUserNameCommand, bool>
+    public class RegisterPhoneCommandHandler : IRequestHandler<RegisterPhoneCommand, bool>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<RegisterUserNameCommandHandler> _logger;
+        private readonly ILogger<RegisterPhoneCommandHandler> _logger;
 
-        public RegisterUserNameCommandHandler(UserManager<ApplicationUser> userManager,
+        public RegisterPhoneCommandHandler(UserManager<ApplicationUser> userManager,
             IServiceProvider serviceProvider,
-            ILogger<RegisterUserNameCommandHandler> logger)
+            ILogger<RegisterPhoneCommandHandler> logger)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<bool> Handle(RegisterUserNameCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(RegisterPhoneCommand request, CancellationToken cancellationToken)
         {
             var user = new ApplicationUser
             {
-                UserName = request.UserName,
-                SecretQuestion = request.SecretQuestion,
-                SecretAnswer = request.SecretAnswer,
+                UserName = request.PhoneNumber,
+                PhoneNumber = request.PhoneNumber,
                 Code = Path.GetRandomFileName().Replace(".", string.Empty).ToUpper()
             };
-            var identityResult = await _userManager.CreateAsync(user, request.Password);
+            var identityResult = await _userManager.CreateAsync(user);
 
             if (!identityResult.Succeeded)
                 throw new ApplicationException(HelperMethods.GetIdentityResultErrorString(identityResult));
 
-            await SendUserRegisteredEventAsync(request.UserName);
+            await SendUserRegisteredEventAsync(request.PhoneNumber);
 
             return true;
         }

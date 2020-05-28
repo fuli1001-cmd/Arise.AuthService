@@ -40,7 +40,7 @@ namespace AuthService.Data.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    MyCode = table.Column<string>(nullable: true),
+                    Code = table.Column<string>(nullable: true),
                     InvitingUserCode = table.Column<string>(nullable: true),
                     SecretQuestion = table.Column<string>(nullable: true),
                     SecretAnswer = table.Column<string>(nullable: true)

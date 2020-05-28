@@ -6,7 +6,7 @@ namespace AuthService.Models
     public class ApplicationUser : IdentityUser
     {
         [PersonalData]
-        public string MyCode { get; set; }
+        public string Code { get; set; }
 
         [PersonalData]
         public string InvitingUserCode { get; set; }
