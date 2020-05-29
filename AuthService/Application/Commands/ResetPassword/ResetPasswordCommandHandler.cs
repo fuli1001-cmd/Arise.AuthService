@@ -39,10 +39,10 @@ namespace AuthService.Application.Commands.ResetPassword
                 throw new ApplicationException("密保问题验证失败。");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var result = await _userManager.ResetPasswordAsync(user, token, request.Password);
+            var identityResult = await _userManager.ResetPasswordAsync(user, token, request.Password);
 
-            if (!result.Succeeded)
-                throw new ApplicationException("密码格式不正确");
+            if (!identityResult.Succeeded)
+                throw new ApplicationException(HelperMethods.GetIdentityResultErrorString(identityResult));
 
             return true;
         }

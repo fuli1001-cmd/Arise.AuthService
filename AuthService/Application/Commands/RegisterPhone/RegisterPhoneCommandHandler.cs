@@ -15,14 +15,17 @@ namespace AuthService.Application.Commands.RegisterPhone
 {
     public class RegisterPhoneCommandHandler : IRequestHandler<RegisterPhoneCommand, bool>
     {
+        private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<RegisterPhoneCommandHandler> _logger;
 
-        public RegisterPhoneCommandHandler(UserManager<ApplicationUser> userManager,
+        public RegisterPhoneCommandHandler(ApplicationDbContext dbContext, 
+            UserManager<ApplicationUser> userManager,
             IServiceProvider serviceProvider,
             ILogger<RegisterPhoneCommandHandler> logger)
         {
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -30,18 +33,31 @@ namespace AuthService.Application.Commands.RegisterPhone
 
         public async Task<bool> Handle(RegisterPhoneCommand request, CancellationToken cancellationToken)
         {
-            var user = new ApplicationUser
+            IdentityResult identityResult = null;
+            var user = _dbContext.Users.SingleOrDefault(u => u.PhoneNumber == request.PhoneNumber);
+
+            if (user == null)
             {
-                UserName = request.PhoneNumber,
-                PhoneNumber = request.PhoneNumber,
-                Code = Path.GetRandomFileName().Replace(".", string.Empty).ToUpper()
-            };
-            var identityResult = await _userManager.CreateAsync(user);
+                user = new ApplicationUser
+                {
+                    UserName = request.PhoneNumber,
+                    PhoneNumber = request.PhoneNumber,
+                    Code = Path.GetRandomFileName().Replace(".", string.Empty).ToUpper()
+                };
+
+                identityResult = await _userManager.CreateAsync(user, request.VerifyCode);
+
+                if (identityResult.Succeeded)
+                    await SendUserRegisteredEventAsync(request.PhoneNumber);
+            }
+            else
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                identityResult = await _userManager.ResetPasswordAsync(user, token, request.VerifyCode);
+            }
 
             if (!identityResult.Succeeded)
                 throw new ApplicationException(HelperMethods.GetIdentityResultErrorString(identityResult));
-
-            await SendUserRegisteredEventAsync(request.PhoneNumber);
 
             return true;
         }

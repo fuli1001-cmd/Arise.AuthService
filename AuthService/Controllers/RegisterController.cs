@@ -1,4 +1,6 @@
 ﻿using Arise.DDD.API;
+using AuthService.Application.Commands.ChangePassword;
+using AuthService.Application.Commands.RegisterPhone;
 using AuthService.Application.Commands.RegisterUserName;
 using AuthService.Application.Commands.ResetPassword;
 using AuthService.Application.Commands.ValidateUserName;
@@ -91,7 +93,7 @@ namespace AuthService.Controllers
         [Route("phone")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> RegisterWithPhoneNumber([FromBody] RegisterUserNameCommand command)
+        public async Task<ActionResult<bool>> RegisterWithPhoneNumber([FromBody] RegisterPhoneCommand command)
         {
             try
             {
@@ -144,7 +146,25 @@ namespace AuthService.Controllers
         {
             var command = new ValidateSecretQuestionCommand { UserName = userName, SecretQuestion = question, SecretAnswer = answer };
             var user = await _mediator.Send(command);
+
+            if (user == null)
+                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper((int)HttpStatusCode.BadRequest, "密保验证失败。"));
+
             return Ok(ResponseWrapper.CreateOkResponseWrapper(user == null ? false : true));
+        }
+
+        /// <summary>
+        /// 获取用户的密保问题
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("secret/{userName}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<string>> GetSecretQuestion(string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            return Ok(ResponseWrapper.CreateOkResponseWrapper(user?.SecretQuestion));
         }
 
         /// <summary>
@@ -153,7 +173,7 @@ namespace AuthService.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPut]
-        [Route("reset")]
+        [Route("password/reset")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> ResetPassword([FromBody] ResetPasswordCommand command)
         {
@@ -167,5 +187,27 @@ namespace AuthService.Controllers
             }
             return Ok(ResponseWrapper.CreateOkResponseWrapper(true));
         }
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("password/change")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<bool>> ChangePassword([FromBody] ChangePasswordCommand command)
+        {
+            try
+            {
+                var result = await _mediator.Send(command);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper((int)HttpStatusCode.BadRequest, ex.Message));
+            }
+            return Ok(ResponseWrapper.CreateOkResponseWrapper(true));
+        }
+
     }
 }

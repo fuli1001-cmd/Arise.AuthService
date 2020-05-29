@@ -9,7 +9,7 @@
             手机号
             </summary>
         </member>
-        <member name="P:AuthService.Application.Commands.RegisterPhone.RegisterPhoneCommand.Code">
+        <member name="P:AuthService.Application.Commands.RegisterPhone.RegisterPhoneCommand.VerifyCode">
             <summary>
             验证码
             </summary>
@@ -28,7 +28,7 @@
             <param name="command"></param>
             <returns></returns>
         </member>
-        <member name="M:AuthService.Controllers.RegisterController.RegisterWithPhoneNumber(AuthService.Application.Commands.RegisterUserName.RegisterUserNameCommand)">
+        <member name="M:AuthService.Controllers.RegisterController.RegisterWithPhoneNumber(AuthService.Application.Commands.RegisterPhone.RegisterPhoneCommand)">
             <summary>
             电话号码注册
             </summary>
@@ -44,9 +44,23 @@
             <param name="answer"></param>
             <returns></returns>
         </member>
+        <member name="M:AuthService.Controllers.RegisterController.GetSecretQuestion(System.String)">
+            <summary>
+            获取用户的密保问题
+            </summary>
+            <param name="userName"></param>
+            <returns></returns>
+        </member>
         <member name="M:AuthService.Controllers.RegisterController.ResetPassword(AuthService.Application.Commands.ResetPassword.ResetPasswordCommand)">
             <summary>
             重设密码
+            </summary>
+            <param name="command"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controllers.RegisterController.ChangePassword(AuthService.Application.Commands.ChangePassword.ChangePasswordCommand)">
+            <summary>
+            修改密码
             </summary>
             <param name="command"></param>
             <returns></returns>

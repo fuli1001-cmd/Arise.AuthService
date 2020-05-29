@@ -23,6 +23,6 @@ namespace AuthService.Application.Commands.RegisterPhone
         /// </summary>
         [DataMember]
         [Required]
-        public string Code { get; set; }
+        public string VerifyCode { get; set; }
     }
 }

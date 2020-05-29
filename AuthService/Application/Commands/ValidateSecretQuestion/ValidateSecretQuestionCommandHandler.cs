@@ -27,9 +27,9 @@ namespace AuthService.Application.Commands.ResetPassword
             var user = await _userManager.FindByNameAsync(request.UserName);
 
             if (user != null && user.SecretAnswer == request.SecretAnswer && user.SecretQuestion == request.SecretQuestion)
-                return null;
+                return user;
 
-            return user;
+            return null;
         }
     }
 }
