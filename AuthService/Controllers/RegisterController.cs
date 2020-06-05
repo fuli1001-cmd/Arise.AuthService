@@ -1,4 +1,5 @@
 ﻿using Arise.DDD.API;
+using Arise.DDD.API.Response;
 using AuthService.Application.Commands.ChangePassword;
 using AuthService.Application.Commands.RegisterPhone;
 using AuthService.Application.Commands.RegisterUserName;
