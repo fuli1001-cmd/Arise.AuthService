@@ -40,8 +40,7 @@ namespace AuthService
                     var endpointConfiguration = new EndpointConfiguration("authservice");
                     //var transport = endpointConfiguration.UseTransport<LearningTransport>();
                     var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
-                    transport.ConnectionString("host=rabbitmq");
-                    //transport.ConnectionString("host=192.168.99.100");
+                    transport.ConnectionString(hostBuilderContext.Configuration.GetConnectionString("RabbitMQ"));
                     transport.UseConventionalRoutingTopology();
                     endpointConfiguration.EnableInstallers();
 
