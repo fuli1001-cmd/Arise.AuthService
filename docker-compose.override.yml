@@ -6,16 +6,17 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__AuthConnection=Server=47.108.194.52;Database=Arise.Auth;User Id=fuli;Password=fl511304;
+      - ConnectionStrings__RabbitMQ=host=47.108.194.52;username=photography;password=Space0dyssey
     ports:
-      - "5105:80"
-
+      - "5100:80"
+      
   fileuploadservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - AuthSettings__Authority=http://43.225.159.87:5100
+      - AuthSettings__Authority=http://authservice
       - AuthSettings__Audience=Arise.FileUploadService
       - StreamingSettings__FileSizeLimit=52428800
-      - StreamingSettings__StoredFilesPath=./
+      - StreamingSettings__StoredFilesPath=./uploaded
     ports:
-      - "10010:80"
+      - "5104:80"

@@ -2,22 +2,22 @@ version: '3.4'
 
 services:
   authservice:
-    image: fuli1001/arise-authservice:linux
+    image: fuli1001/arise-authservice:win
     build:
       context: .
-      dockerfile: AuthService/Dockerfile
+      dockerfile: AuthService/Dockerfile.win
     networks:
       - arisenetwork
       
   fileuploadservice:
-    image: fuli1001/arise-fileuploadservice:linux
+    image: fuli1001/arise-fileuploadservice:win
     build:
       context: .
-      dockerfile: FileUploadService/Dockerfile
+      dockerfile: FileUploadService/Dockerfile.win
     networks:
       - arisenetwork
     volumes:
-      - /var/www/photography:/app/uploaded
+      - C:/Phototgraphy:c:/app/uploaded
       
 networks:
   arisenetwork:
