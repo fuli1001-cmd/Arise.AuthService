@@ -70,8 +70,9 @@ namespace Arise.FileUploadService
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                IdentityModelEventSource.ShowPII = true;
             }
+
+            IdentityModelEventSource.ShowPII = true;
 
             //app.UseHttpsRedirection();
 
