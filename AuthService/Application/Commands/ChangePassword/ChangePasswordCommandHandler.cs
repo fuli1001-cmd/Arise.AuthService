@@ -1,4 +1,5 @@
-﻿using AuthService.Models;
+﻿using Arise.DDD.Domain.Exceptions;
+using AuthService.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -30,12 +31,12 @@ namespace AuthService.Application.Commands.ChangePassword
             var user = await _userManager.FindByNameAsync(request.UserName);
 
             if (user == null)
-                throw new ApplicationException("密码修改失败。");
+                throw new ClientException("操作失败。", new List<string> { $"User {request.UserName} does not exist."});
 
             var identityResult = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
 
             if (!identityResult.Succeeded)
-                throw new ApplicationException(HelperMethods.GetIdentityResultErrorString(identityResult));
+                throw new ClientException(HelperMethods.GetIdentityResultErrorString(identityResult));
 
             return true;
         }

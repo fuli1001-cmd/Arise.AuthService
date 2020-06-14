@@ -1,4 +1,5 @@
-﻿using Arise.DDD.Messages.Events;
+﻿using Arise.DDD.Domain.Exceptions;
+using Arise.DDD.Messages.Events;
 using AuthService.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -40,7 +41,7 @@ namespace AuthService.Application.Commands.RegisterUserName
             var identityResult = await _userManager.CreateAsync(user, request.Password);
 
             if (!identityResult.Succeeded)
-                throw new ApplicationException(HelperMethods.GetIdentityResultErrorString(identityResult));
+                throw new ClientException(HelperMethods.GetIdentityResultErrorString(identityResult));
 
             await SendUserRegisteredEventAsync(request.UserName);
 

@@ -1,4 +1,4 @@
-﻿using Arise.DDD.API.ActionResults;
+﻿using Arise.DDD.API.Response;
 using Arise.DDD.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,45 +13,37 @@ namespace Arise.DDD.API.Filters
 {
     public class HttpGlobalExceptionFilter : IExceptionFilter
     {
-        private readonly ILogger<HttpGlobalExceptionFilter> logger;
+        private readonly ILogger<HttpGlobalExceptionFilter> _logger;
 
         public HttpGlobalExceptionFilter(ILogger<HttpGlobalExceptionFilter> logger)
         {
-            this.logger = logger;
+            _logger = logger;
         }
 
         public void OnException(ExceptionContext context)
         {
-            logger.LogError(new EventId(context.Exception.HResult),
-                context.Exception,
-                context.Exception.Message);
-
-
-            if (context.Exception.GetType() == typeof(DomainException))
+            // 客户端错误
+            // 除了错误消息外，同时返回开发人员消息供开发人员使用
+            if (context.Exception.GetType() == typeof(ClientException))
             {
-                var problemDetails = new ValidationProblemDetails()
-                {
-                    Instance = context.HttpContext.Request.Path,
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = "Please refer to the errors property for additional details."
-                };
-
-                problemDetails.Errors.Add("DomainValidations", new string[] { context.Exception.Message.ToString() });
-
-                context.Result = new BadRequestObjectResult(problemDetails);
+                var clientException = context.Exception as ClientException;
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Result = new ObjectResult(ResponseWrapper.CreateErrorResponseWrapper(
+                    (StatusCode)context.HttpContext.Response.StatusCode,
+                    clientException.Message,
+                    clientException.DeveloperMessages));
             }
             else
             {
-                var json = new JsonErrorResponse
-                {
-                    Messages = new[] { "An error occur.Try it again." }
-                };
-
-                context.Result = new InternalServerErrorObjectResult(json);
+                // 服务端错误
+                // 不返回服务器内部错误消息（DeveloperMessages）给客户端
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Result = new ObjectResult(ResponseWrapper.CreateErrorResponseWrapper((StatusCode)context.HttpContext.Response.StatusCode, context.Exception.Message));
             }
+
             context.ExceptionHandled = true;
+
+            _logger.LogError("{@Exception}", context.Exception);
         }
 
         private class JsonErrorResponse

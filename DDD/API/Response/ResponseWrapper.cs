@@ -6,25 +6,33 @@ namespace Arise.DDD.API.Response
 {
     public class ResponseWrapper
     {
-        public int Code { get; set; }
+        // 状态码
+        public StatusCode Code { get; set; }
+
+        // 显示给用户的消息
         public string Message { get; set; }
+
+        // 开发人员使用的消息
+        public List<string> DeveloperMessages { get; set; }
+
         public object Data { get; set; }
 
         protected ResponseWrapper(object data)
         {
+            Code = StatusCode.OK;
             Data = data;
         }
 
-        protected ResponseWrapper(int code, string message)
+        protected ResponseWrapper(StatusCode code, string message, List<string> developerMessages)
         {
             Code = code;
             Message = message;
+            DeveloperMessages = developerMessages;
         }
 
-        protected ResponseWrapper(int code, string message, object data)
+        protected ResponseWrapper(StatusCode code, string message, List<string> developerMessages, object data)
+            : this(code, message, developerMessages)
         {
-            Code = code;
-            Message = message;
             Data = data;
         }
 
@@ -33,14 +41,24 @@ namespace Arise.DDD.API.Response
             return new ResponseWrapper(data);
         }
 
-        public static ResponseWrapper CreateErrorResponseWrapper(int code, string message)
+        public static ResponseWrapper CreateErrorResponseWrapper(StatusCode code, string message, List<string> developerMessages = null)
         {
-            return new ResponseWrapper(code, message);
+            return new ResponseWrapper(code, message, developerMessages);
         }
 
-        public static ResponseWrapper CreateErrorResponseWrapper(int code, string message, object data)
+        public static ResponseWrapper CreateErrorResponseWrapper(StatusCode code, string message, List<string> developerMessages, object data)
         {
-            return new ResponseWrapper(code, message, data);
+            return new ResponseWrapper(code, message, developerMessages, data);
         }
+    }
+
+    // 错误状态码
+    // reference: https://blog.restcase.com/rest-api-error-codes-101/
+    public enum StatusCode
+    {
+        OK = 0, // 正常
+        ClientError = 400, // 客户端错误
+        Unauthorized = 401, // 未授权
+        ServerError = 500 // 服务端错误
     }
 }

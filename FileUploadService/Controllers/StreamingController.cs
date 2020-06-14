@@ -1,4 +1,6 @@
-﻿using Arise.FileUploadService.Filters;
+﻿using Arise.DDD.API.Response;
+using Arise.DDD.Domain.Exceptions;
+using Arise.FileUploadService.Filters;
 using Arise.FileUploadService.Models;
 using Arise.FileUploadService.Settings;
 using Arise.FileUploadService.Utilities;
@@ -54,7 +56,7 @@ namespace Arise.FileUploadService.Controllers
                 // Log error
 
                 //return BadRequest(ModelState);
-                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper(1, new string[] { "The request couldn't be processed." }));
+                throw new ClientException("Upload Failed.", new List<string> { "Not multipart content type." });
             }
 
             var boundary = MultipartRequestHelper.GetBoundary(
@@ -141,7 +143,8 @@ namespace Arise.FileUploadService.Controllers
             //return Created(nameof(StreamingController), null);
             var uploadStatus = new UploadStatus { SuccessUploads = successUploads, FailedUploads = failedUploads };
             if (failedUploads.Count > 0)
-                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper(1, new string[] { "Upload Failed." }, uploadStatus));
+                return StatusCode((int)HttpStatusCode.BadRequest, 
+                    ResponseWrapper.CreateErrorResponseWrapper(DDD.API.Response.StatusCode.ClientError, "Upload Failed.", null, uploadStatus));
             else
                 return Ok(ResponseWrapper.CreateOkResponseWrapper(uploadStatus));
         }

@@ -50,16 +50,8 @@ namespace AuthService.Controllers
         public async Task<ActionResult<bool>> CheckUserNameAsync(string userName)
         {
             var command = new ValidateUserNameCommand { UserName = userName };
-            try
-            {
-                await _mediator.Send(command);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper((int)HttpStatusCode.BadRequest, ex.Message, false));
-            }
-
-            return Ok(ResponseWrapper.CreateOkResponseWrapper(true));
+            var result = await _mediator.Send(command);
+            return Ok(ResponseWrapper.CreateOkResponseWrapper(result));
         }
         
         /// <summary>
@@ -73,16 +65,8 @@ namespace AuthService.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<bool>> RegisterWithUserName([FromBody] RegisterUserNameCommand command)
         {
-            try
-            {
-                await _mediator.Send(command);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper((int)HttpStatusCode.BadRequest, ex.Message));
-            }
-
-            return Ok(ResponseWrapper.CreateOkResponseWrapper(true));
+            var result = await _mediator.Send(command);
+            return Ok(ResponseWrapper.CreateOkResponseWrapper(result));
         }
 
         /// <summary>
@@ -96,16 +80,8 @@ namespace AuthService.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<bool>> RegisterWithPhoneNumber([FromBody] RegisterPhoneCommand command)
         {
-            try
-            {
-                await _mediator.Send(command);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper((int)HttpStatusCode.BadRequest, ex.Message));
-            }
-
-            return Ok(ResponseWrapper.CreateOkResponseWrapper(true));
+            var result = await _mediator.Send(command);
+            return Ok(ResponseWrapper.CreateOkResponseWrapper(result));
         }
 
         ///// <summary>
@@ -149,9 +125,9 @@ namespace AuthService.Controllers
             var user = await _mediator.Send(command);
 
             if (user == null)
-                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper((int)HttpStatusCode.BadRequest, "密保验证失败。"));
+                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper((StatusCode)(int)HttpStatusCode.BadRequest, "密保验证失败。"));
 
-            return Ok(ResponseWrapper.CreateOkResponseWrapper(user == null ? false : true));
+            return Ok(ResponseWrapper.CreateOkResponseWrapper(true));
         }
 
         /// <summary>
@@ -178,15 +154,8 @@ namespace AuthService.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> ResetPassword([FromBody] ResetPasswordCommand command)
         {
-            try
-            {
-                var result = await _mediator.Send(command);
-            }
-            catch(Exception ex)
-            {
-                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper((int)HttpStatusCode.BadRequest, ex.Message));
-            }
-            return Ok(ResponseWrapper.CreateOkResponseWrapper(true));
+            var result = await _mediator.Send(command);
+            return Ok(ResponseWrapper.CreateOkResponseWrapper(result));
         }
 
         /// <summary>
@@ -199,15 +168,8 @@ namespace AuthService.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> ChangePassword([FromBody] ChangePasswordCommand command)
         {
-            try
-            {
-                var result = await _mediator.Send(command);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper((int)HttpStatusCode.BadRequest, ex.Message));
-            }
-            return Ok(ResponseWrapper.CreateOkResponseWrapper(true));
+            var result = await _mediator.Send(command);
+            return Ok(ResponseWrapper.CreateOkResponseWrapper(result));
         }
 
     }

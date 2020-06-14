@@ -1,4 +1,5 @@
-﻿using AuthService.Models;
+﻿using Arise.DDD.Domain.Exceptions;
+using AuthService.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -36,13 +37,13 @@ namespace AuthService.Application.Commands.ResetPassword
             var user = await _mediator.Send(validateSecretQuestionCommand);
 
             if (user == null)
-                throw new ApplicationException("密保问题验证失败。");
+                throw new ClientException("密保问题验证失败。");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var identityResult = await _userManager.ResetPasswordAsync(user, token, request.Password);
 
             if (!identityResult.Succeeded)
-                throw new ApplicationException(HelperMethods.GetIdentityResultErrorString(identityResult));
+                throw new ClientException(HelperMethods.GetIdentityResultErrorString(identityResult));
 
             return true;
         }

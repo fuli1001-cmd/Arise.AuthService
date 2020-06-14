@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Arise.DDD.API.Filters;
+using Arise.DDD.API.Response;
 using Arise.FileUploadService.Filters;
 using Arise.FileUploadService.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 namespace Arise.FileUploadService
 {
@@ -77,6 +81,18 @@ namespace Arise.FileUploadService
             //app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            // return a json error when unauthorized
+            app.UseStatusCodePages(async context =>
+            {
+                if (context.HttpContext.Response.StatusCode == 401 ||
+                    context.HttpContext.Response.StatusCode == 403)
+                {
+                    context.HttpContext.Response.ContentType = "application/json";
+                    var json = JsonConvert.SerializeObject(ResponseWrapper.CreateErrorResponseWrapper(StatusCode.Unauthorized, "Unauthorized."));
+                    await context.HttpContext.Response.WriteAsync(json);
+                }
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();

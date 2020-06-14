@@ -16,6 +16,7 @@ using AuthService.Models;
 using MediatR;
 using AuthService.Application.Commands.RegisterUserName;
 using Microsoft.OpenApi.Models;
+using Arise.DDD.API.Filters;
 
 namespace AuthService
 {
@@ -45,7 +46,10 @@ namespace AuthService
 
             services.AddMediatR(typeof(RegisterUserNameCommand));
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(typeof(HttpGlobalExceptionFilter));
+            });
             services.AddRazorPages();
 
             //services.AddIdentity<ApplicationUser, IdentityRole>()

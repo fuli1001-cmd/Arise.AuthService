@@ -1,4 +1,5 @@
-﻿using AuthService.Data;
+﻿using Arise.DDD.Domain.Exceptions;
+using AuthService.Data;
 using AuthService.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -57,7 +58,7 @@ namespace AuthService.Application.Commands.RegisterPhone
             }
 
             if (!identityResult.Succeeded)
-                throw new ApplicationException(HelperMethods.GetIdentityResultErrorString(identityResult));
+                throw new ClientException(HelperMethods.GetIdentityResultErrorString(identityResult));
 
             return true;
         }
