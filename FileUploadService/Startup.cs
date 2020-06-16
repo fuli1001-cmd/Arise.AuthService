@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Arise.FileUploadService
 {
@@ -89,7 +90,10 @@ namespace Arise.FileUploadService
                     context.HttpContext.Response.StatusCode == 403)
                 {
                     context.HttpContext.Response.ContentType = "application/json";
-                    var json = JsonConvert.SerializeObject(ResponseWrapper.CreateErrorResponseWrapper(StatusCode.Unauthorized, "Unauthorized."));
+                    var json = JsonConvert.SerializeObject(ResponseWrapper.CreateErrorResponseWrapper(StatusCode.Unauthorized, "Unauthorized"), new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    });
                     await context.HttpContext.Response.WriteAsync(json);
                 }
             });
