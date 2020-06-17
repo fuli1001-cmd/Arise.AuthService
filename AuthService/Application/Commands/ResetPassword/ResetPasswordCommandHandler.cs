@@ -37,7 +37,7 @@ namespace AuthService.Application.Commands.ResetPassword
             var user = await _mediator.Send(validateSecretQuestionCommand);
 
             if (user == null)
-                throw new ClientException("密保问题验证失败。");
+                throw new ClientException("密保验证失败");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var identityResult = await _userManager.ResetPasswordAsync(user, token, request.Password);

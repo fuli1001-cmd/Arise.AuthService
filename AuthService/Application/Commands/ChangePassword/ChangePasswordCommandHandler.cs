@@ -31,7 +31,7 @@ namespace AuthService.Application.Commands.ChangePassword
             var user = await _userManager.FindByNameAsync(request.UserName);
 
             if (user == null)
-                throw new ClientException("操作失败。", new List<string> { $"User {request.UserName} does not exist."});
+                throw new ClientException("操作失败", new List<string> { $"User {request.UserName} does not exist."});
 
             var identityResult = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
 

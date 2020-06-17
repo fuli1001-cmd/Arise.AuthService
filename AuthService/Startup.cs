@@ -41,6 +41,11 @@ namespace AuthService
                 //options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
+                
+                // 临时设置：不锁用户
+                options.Lockout.AllowedForNewUsers = false;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(1);
+                options.Lockout.MaxFailedAccessAttempts = 10000;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>();
 

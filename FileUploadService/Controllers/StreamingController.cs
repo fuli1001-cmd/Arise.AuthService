@@ -56,7 +56,7 @@ namespace Arise.FileUploadService.Controllers
                 // Log error
 
                 //return BadRequest(ModelState);
-                throw new ClientException("Upload Failed.", new List<string> { "Not multipart content type." });
+                throw new ClientException("上传失败", new List<string> { "Not multipart content type." });
             }
 
             var boundary = MultipartRequestHelper.GetBoundary(

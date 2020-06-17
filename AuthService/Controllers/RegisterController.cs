@@ -125,7 +125,7 @@ namespace AuthService.Controllers
             var user = await _mediator.Send(command);
 
             if (user == null)
-                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper((StatusCode)(int)HttpStatusCode.BadRequest, "密保验证失败。"));
+                return StatusCode((int)HttpStatusCode.BadRequest, ResponseWrapper.CreateErrorResponseWrapper((StatusCode)(int)HttpStatusCode.BadRequest, "密保验证失败"));
 
             return Ok(ResponseWrapper.CreateOkResponseWrapper(true));
         }

@@ -28,11 +28,11 @@ namespace AuthService.Application.Commands.ValidateUserName
         {
             Regex regex = new Regex("^[a-zA-Z0-9]{6,}$");
             if (!regex.IsMatch(request.UserName))
-                throw new ClientException("用户名须包含字母和数字，且至少为6位。");
+                throw new ClientException("用户名须包含字母和数字，且至少为6位");
 
             var user = await _userManager.FindByNameAsync(request.UserName);
             if (user != null)
-                throw new ClientException("用户名已存在。");
+                throw new ClientException("用户名已存在");
 
             return true;
         }
