@@ -14,7 +14,7 @@ namespace AuthService
             new IdentityResource[]
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile(),
+                new IdentityResources.Profile()
             };
 
 
@@ -63,8 +63,8 @@ namespace AuthService
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
 
-                    AccessTokenLifetime = 86400,
-                    IdentityTokenLifetime = 86400,
+                    AccessTokenLifetime = 604800,
+                    IdentityTokenLifetime = 604800,
 
                     AllowedScopes = new List<string>
                     {

@@ -16,5 +16,8 @@ namespace AuthService.Models
 
         [PersonalData]
         public string SecretAnswer { get; set; }
+
+        [PersonalData]
+        public string Role { get; set; }
     }
 }

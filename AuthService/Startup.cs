@@ -17,6 +17,7 @@ using MediatR;
 using AuthService.Application.Commands.RegisterUserName;
 using Microsoft.OpenApi.Models;
 using Arise.DDD.API.Filters;
+using AuthService.Quickstart;
 
 namespace AuthService
 {
@@ -69,10 +70,11 @@ namespace AuthService
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
             })
-                .AddInMemoryIdentityResources(Config.Ids)
-                .AddInMemoryApiResources(Config.Apis)
-                .AddInMemoryClients(Config.Clients)
-                .AddAspNetIdentity<ApplicationUser>();
+            .AddInMemoryIdentityResources(Config.Ids)
+            .AddInMemoryApiResources(Config.Apis)
+            .AddInMemoryClients(Config.Clients)
+            .AddAspNetIdentity<ApplicationUser>()
+            .AddProfileService<ProfileService>();
 
             // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();
