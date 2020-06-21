@@ -21,7 +21,6 @@ namespace AuthService.Quickstart
 
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
-            Console.WriteLine("--------------GetProfileDataAsync---------------------");
             var user = await _userManager.GetUserAsync(context.Subject);
             if (user != null)
             {
@@ -32,7 +31,6 @@ namespace AuthService.Quickstart
 
         public async Task IsActiveAsync(IsActiveContext context)
         {
-            Console.WriteLine("--------------IsActiveAsync---------------------");
             //var user = await _userManager.GetUserAsync(context.Subject);
             //context.IsActive = (user != null) && user.IsActive;
             context.IsActive = true;

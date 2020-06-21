@@ -112,15 +112,16 @@ namespace AuthService
                 // MVC client using code flow + pkce
                 new Client
                 {
-                    ClientId = "mvc",
-                    ClientName = "MVC Client",
+                    ClientId = "webclient",
+                    ClientName = "Web Client",
 
+                    RequireConsent = false,
                     AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
                     ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
 
                     RedirectUris = { "https://localhost:4001/signin-oidc" },
-                    FrontChannelLogoutUri = "https://localhost:4001/signout-oidc",
-                    PostLogoutRedirectUris = { "https://localhost:4001/signout-callback-oidc" },
+                    FrontChannelLogoutUri = "https://localhost:4001",
+                    //PostLogoutRedirectUris = { "https://localhost:4001" },
 
                     AllowOfflineAccess = true,
                     RefreshTokenUsage = TokenUsage.ReUse,
