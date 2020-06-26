@@ -132,7 +132,7 @@ namespace AuthService
             };
 
             var scopes = Configuration.GetValue<string>("IdentityServer:ApiResources").Split(" ").ToList();
-            var apiResources = scopes.Select(api => new ApiResource(api));
+            var apiResources = scopes.Select(scope => new ApiResource(scope)).ToList();
 
             scopes.Add(IdentityServerConstants.StandardScopes.OpenId);
             scopes.Add(IdentityServerConstants.StandardScopes.Profile);
