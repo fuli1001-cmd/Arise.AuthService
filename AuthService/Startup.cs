@@ -18,6 +18,9 @@ using AuthService.Application.Commands.RegisterUserName;
 using Microsoft.OpenApi.Models;
 using Arise.DDD.API.Filters;
 using AuthService.Quickstart;
+using AuthService.Application.Behaviors;
+using IdentityServer4.Models;
+using IdentityServer4;
 
 namespace AuthService
 {
@@ -63,22 +66,9 @@ namespace AuthService
             //    .AddDefaultTokenProviders()
             //    .AddDefaultUI();
 
-            var builder = services.AddIdentityServer(options =>
-            {
-                options.Events.RaiseErrorEvents = true;
-                options.Events.RaiseInformationEvents = true;
-                options.Events.RaiseFailureEvents = true;
-                options.Events.RaiseSuccessEvents = true;
-                options.Authentication.RequireCspFrameSrcForSignout = false;
-            })
-            .AddInMemoryIdentityResources(Config.Ids)
-            .AddInMemoryApiResources(Config.Apis)
-            .AddInMemoryClients(Config.Clients)
-            .AddAspNetIdentity<ApplicationUser>()
-            .AddProfileService<ProfileService>();
+            ConfigureIdentityServer(services);
 
-            // not recommended for production - you need to store your key material somewhere secure
-            builder.AddDeveloperSigningCredential();
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
             services.AddSwaggerGen(c =>
             {
@@ -129,6 +119,78 @@ namespace AuthService
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Arise.Register API V1");
             });
+        }
+
+        private void ConfigureIdentityServer(IServiceCollection services)
+        {
+            var lifetime = 604800;
+
+            var idResources = new IdentityResource[]
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile()
+            };
+
+            var scopes = Configuration.GetValue<string>("IdentityServer:ApiResources").Split(" ").ToList();
+            var apiResources = scopes.Select(api => new ApiResource(api));
+
+            scopes.Add(IdentityServerConstants.StandardScopes.OpenId);
+            scopes.Add(IdentityServerConstants.StandardScopes.Profile);
+
+            var clients = new Client[]
+            {
+                new Client
+                {
+                    ClientId = "ro.client",
+                    ClientName = "Resource Owner Client",
+
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
+
+                    AccessTokenLifetime = lifetime,
+                    IdentityTokenLifetime = lifetime,
+
+                    AllowedScopes = scopes
+                },
+                new Client
+                {
+                    ClientId = "webclient",
+                    ClientName = "Web Client",
+
+                    RequireConsent = false,
+                    AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
+                    ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
+
+                    AccessTokenLifetime = lifetime,
+                    IdentityTokenLifetime = lifetime,
+
+                    RedirectUris = Configuration.GetValue<string>("IdentityServer:RedirectUris").Split(" "),
+                    //FrontChannelLogoutUri = "https://localhost:4001",
+                    //PostLogoutRedirectUris = { "https://localhost:4001" },
+
+                    AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse,
+
+                    AllowedScopes = scopes
+                }
+            };
+
+            var builder = services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseErrorEvents = true;
+                options.Events.RaiseInformationEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseSuccessEvents = true;
+                options.Authentication.RequireCspFrameSrcForSignout = false;
+            })
+            .AddInMemoryIdentityResources(idResources)
+            .AddInMemoryApiResources(apiResources)
+            .AddInMemoryClients(clients)
+            .AddAspNetIdentity<ApplicationUser>()
+            .AddProfileService<ProfileService>();
+
+            // not recommended for production - you need to store your key material somewhere secure
+            builder.AddDeveloperSigningCredential();
         }
     }
 }
