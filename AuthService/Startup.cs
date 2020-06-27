@@ -21,6 +21,8 @@ using AuthService.Quickstart;
 using AuthService.Application.Behaviors;
 using IdentityServer4.Models;
 using IdentityServer4;
+using Arise.DDD.Infrastructure.Extensions;
+using System.Reflection;
 
 namespace AuthService
 {
@@ -36,9 +38,13 @@ namespace AuthService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("AuthConnection")));
+            //ConfigureConsul(services);
+
+            services.AddSqlDataAccessServices<ApplicationDbContext>(Configuration.GetConnectionString("AuthConnection"), typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("AuthConnection")));
 
             services.AddDefaultIdentity<ApplicationUser>(options =>
             {
@@ -192,5 +198,12 @@ namespace AuthService
             // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();
         }
+
+        //private void ConfigureConsul(IServiceCollection services)
+        //{
+        //    var serviceConfig = Configuration.GetServiceConfig();
+
+        //    services.RegisterConsulServices(serviceConfig);
+        //}
     }
 }
