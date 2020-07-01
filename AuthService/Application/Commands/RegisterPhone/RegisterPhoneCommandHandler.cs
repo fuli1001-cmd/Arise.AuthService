@@ -3,6 +3,7 @@ using AuthService.Data;
 using AuthService.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
 using System;
@@ -35,10 +36,13 @@ namespace AuthService.Application.Commands.RegisterPhone
         public async Task<bool> Handle(RegisterPhoneCommand request, CancellationToken cancellationToken)
         {
             IdentityResult identityResult = null;
-            var user = _dbContext.Users.SingleOrDefault(u => u.PhoneNumber == request.PhoneNumber);
+
+            // 检查该手机号用户是否已存在
+            var user = await _dbContext.Users.SingleOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
 
             if (user == null)
             {
+                // 该手机号注册的用户不存在，创建用户并设置其一次性密码为Code + 验证码，用户将以该一次性密码登录
                 user = new ApplicationUser
                 {
                     UserName = request.PhoneNumber,
@@ -53,6 +57,7 @@ namespace AuthService.Application.Commands.RegisterPhone
             }
             else
             {
+                // 该手机号注册的用户已存在，设置其一次性密码为Code + 验证码，用户将以该一次性密码登录
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 identityResult = await _userManager.ResetPasswordAsync(user, token, request.VerifyCode);
             }

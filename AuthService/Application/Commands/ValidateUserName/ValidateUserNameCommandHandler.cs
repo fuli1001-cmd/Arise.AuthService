@@ -26,9 +26,10 @@ namespace AuthService.Application.Commands.ValidateUserName
 
         public async Task<bool> Handle(ValidateUserNameCommand request, CancellationToken cancellationToken)
         {
-            Regex regex = new Regex("^[a-zA-Z0-9]{6,}$");
-            if (!regex.IsMatch(request.UserName))
-                throw new ClientException("用户名须包含字母和数字，且至少为6位");
+            Regex regexChars = new Regex("[a-zA-Z]");
+            Regex regexNumbers = new Regex("[0-9]");
+            if (!regexChars.IsMatch(request.UserName) || !regexNumbers.IsMatch(request.UserName) || request.UserName.Length < 6 || request.UserName.Length > 16)
+                throw new ClientException("用户名须包含字母和数字，且至少为6位，最多为16位");
 
             var user = await _userManager.FindByNameAsync(request.UserName);
             if (user != null)
