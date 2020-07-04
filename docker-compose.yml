@@ -2,7 +2,8 @@ version: '3.4'
 
 services:
   authservice:
-    image: fuli1001/arise-authservice:linux
+    #image: fuli1001/arise-authservice:linux
+    image: arise-authservice
     build:
       context: .
       dockerfile: AuthService/Dockerfile
@@ -10,7 +11,8 @@ services:
       - arisenetwork
       
   fileuploadservice:
-    image: fuli1001/arise-fileuploadservice:linux
+    #image: fuli1001/arise-fileuploadservice:linux
+    image: arise-fileuploadservice
     build:
       context: .
       dockerfile: FileUploadService/Dockerfile
