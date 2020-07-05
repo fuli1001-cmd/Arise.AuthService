@@ -36,6 +36,6 @@ jobs:
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: docker stack deploy --compose-file ~/photo/deploy/auth/docker-compose.yml --compose-file ~/photo/deploy/auth/docker-compose.override.yml auth
-          host: ${{ secrets.TEST_SERVER }}
-          username: ${{ secrets.TEST_SERVER_USER }}
+          host: ${{ secrets.PROD_SERVER }}
+          username: ${{ secrets.PROD_SERVER_USER }}
           privateKey: ${{ secrets.ID_RSA }}
