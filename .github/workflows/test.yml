@@ -1,0 +1,41 @@
+name: Arise CI/CD (Test)
+
+on:
+  push:
+    branches:
+      - test
+  pull_request:
+    branches:
+      - test
+      
+jobs:
+  cd:
+    runs-on: ubuntu-18.04
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build
+        run: docker-compose build
+      - name: Tags
+        run: |
+          docker tag arise-authservice ${{ secrets.DOCKER_USER }}/arise-authservice:${{ github.sha }}
+          docker tag arise-authservice ${{ secrets.DOCKER_USER }}/arise-authservice:linux
+          
+          docker tag arise-fileuploadservice ${{ secrets.DOCKER_USER }}/arise-fileuploadservice:${{ github.sha }}
+          docker tag arise-fileuploadservice ${{ secrets.DOCKER_USER }}/arise-fileuploadservice:linux
+      - name: Push
+        run: |
+          docker push ${{ secrets.DOCKER_USER }}/arise-authservice:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USER }}/arise-authservice:linux
+          
+          docker push ${{ secrets.DOCKER_USER }}/arise-fileuploadservice:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USER }}/arise-fileuploadservice:linux
+      - name: Deploy
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: docker stack deploy --compose-file ~/photo/deploy/auth/docker-compose.yml --compose-file ~/photo/deploy/auth/docker-compose.override.yml auth
+          host: ${{ secrets.TEST_SERVER }}
+          username: ${{ secrets.TEST_SERVER_USER }}
+          privateKey: ${{ secrets.ID_RSA }}
