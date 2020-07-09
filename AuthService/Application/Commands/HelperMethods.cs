@@ -37,10 +37,20 @@ namespace AuthService.Application.Commands
             if (!identityResult.Succeeded)
             {
                 foreach (var error in identityResult.Errors)
-                    messageBuilder = messageBuilder.Append(error.Description).Append("\r\n");
+                    messageBuilder = messageBuilder.Append(GetCnError(error.Description)).Append("\r\n");
             }
 
             return messageBuilder.ToString();
+        }
+
+        private static string GetCnError(string enError)
+        {
+            var cnError = enError;
+
+            if (enError.Contains("Incorrect password"))
+                cnError = "密码错误";
+
+            return enError;
         }
     }
 }
