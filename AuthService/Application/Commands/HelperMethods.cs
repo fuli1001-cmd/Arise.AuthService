@@ -50,7 +50,7 @@ namespace AuthService.Application.Commands
             if (enError.Contains("Incorrect password"))
                 cnError = "密码错误";
 
-            return enError;
+            return cnError;
         }
     }
 }
