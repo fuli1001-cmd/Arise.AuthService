@@ -40,7 +40,11 @@ namespace AuthService.Application.Commands
                     messageBuilder = messageBuilder.Append(GetCnError(error.Description)).Append("\r\n");
             }
 
-            return messageBuilder.ToString();
+            var message = messageBuilder.ToString();
+            if (message.EndsWith("\r\n"))
+                message = message.Substring(0, message.Length - 2);
+
+            return message;
         }
 
         private static string GetCnError(string enError)
