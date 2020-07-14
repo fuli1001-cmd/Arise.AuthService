@@ -1,12 +1,16 @@
-name: Arise CI/CD (Test)
+name: FileService (Test)
 
 on:
   push:
     branches:
       - test
+    paths:
+      - 'FileService/**'
   pull_request:
     branches:
       - test
+    paths:
+      - 'FileService/**'
       
 jobs:
   cd:
@@ -14,24 +18,23 @@ jobs:
     
     steps:
       - uses: actions/checkout@v2
+      
       - name: Docker login
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+        
       - name: Build
-        run: docker-compose build
+        run: docker build -f ./FileService/File.API/Dockerfile -t arise-fileservice .
+        
       - name: Tags
         run: |
-          docker tag arise-authservice ${{ secrets.DOCKER_USER }}/arise-authservice:${{ github.sha }}
-          docker tag arise-authservice ${{ secrets.DOCKER_USER }}/arise-authservice:linux
+          docker tag arise-fileservice ${{ secrets.DOCKER_USER }}/arise-fileservice:${{ github.sha }}
+          docker tag arise-fileservice ${{ secrets.DOCKER_USER }}/arise-fileservice:linux
           
-          docker tag arise-fileuploadservice ${{ secrets.DOCKER_USER }}/arise-fileuploadservice:${{ github.sha }}
-          docker tag arise-fileuploadservice ${{ secrets.DOCKER_USER }}/arise-fileuploadservice:linux
       - name: Push
         run: |
-          docker push ${{ secrets.DOCKER_USER }}/arise-authservice:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_USER }}/arise-authservice:linux
+          docker push ${{ secrets.DOCKER_USER }}/arise-fileservice:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USER }}/arise-fileservice:linux
           
-          docker push ${{ secrets.DOCKER_USER }}/arise-fileuploadservice:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_USER }}/arise-fileuploadservice:linux
       - name: Deploy
         uses: garygrossgarten/github-action-ssh@release
         with:
