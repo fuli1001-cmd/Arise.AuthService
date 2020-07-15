@@ -17,9 +17,9 @@ namespace FileService.File.Infrastructure.Repositories
 
         }
 
-        public async Task<FileInfo> GetFileInfoByNameAsync(string name)
+        public async Task<FileInfo> GetFileInfoAsync(string name, FileTag tag)
         {
-            return await _context.FileInfos.FirstOrDefaultAsync(f => f.Name.ToLower() == name.ToLower());
+            return await _context.FileInfos.FirstOrDefaultAsync(f => f.Name.ToLower() == name.ToLower() && f.Tag == tag);
         }
     }
 }

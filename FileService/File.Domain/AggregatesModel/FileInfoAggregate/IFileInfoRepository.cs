@@ -8,6 +8,6 @@ namespace FileService.File.Domain.AggregatesModel.FileInfoAggregate
 {
     public interface IFileInfoRepository : IRepository<FileInfo>
     {
-        Task<FileInfo> GetFileInfoByNameAsync(string name);
+        Task<FileInfo> GetFileInfoAsync(string name, FileTag tag);
     }
 }

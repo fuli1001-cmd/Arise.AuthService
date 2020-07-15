@@ -106,7 +106,7 @@ namespace FileService.File.API.Controllers
                         //var trustedFileNameForFileStorage = Path.GetRandomFileName();
                         var trustedFileNameForFileStorage = trustedFileNameForDisplay;
 
-                        var fileInfo = await _fileInfoRepository.GetFileInfoByNameAsync(trustedFileNameForFileStorage);
+                        var fileInfo = await _fileInfoRepository.GetFileInfoAsync(trustedFileNameForFileStorage, tags[i]);
 
                         if (fileInfo == null)
                         {
@@ -152,7 +152,7 @@ namespace FileService.File.API.Controllers
                                     _logger.LogInformation(
                                         "Uploaded file '{TrustedFileNameForDisplay}' saved to " +
                                         "'{TargetFilePath}' as {TrustedFileNameForFileStorage}",
-                                        trustedFileNameForDisplay, _streamingSettings.Value.StoredFilesPath,
+                                        trustedFileNameForDisplay, folder,
                                         trustedFileNameForFileStorage);
                                 }
                             }
