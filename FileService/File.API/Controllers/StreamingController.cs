@@ -58,7 +58,7 @@ namespace FileService.File.API.Controllers
         // https://github.com/BrunoZell/JsonModelBinder
         [HttpPost]
         [DisableFormValueModelBinding]
-        public async Task<IActionResult> UploadPhysical([ModelBinder(BinderType = typeof(JsonModelBinder))] List<FileInfoDto> fileInfos)
+        public async Task<IActionResult> UploadPhysical([ModelBinder(BinderType = typeof(JsonModelBinder))] List<FileTag> tags)
         {
             var i = 0;
             var successUploads = new List<UploadInfoDto>();
@@ -81,12 +81,12 @@ namespace FileService.File.API.Controllers
 
                 if (hasContentDispositionHeader)
                 {
-                    // This check assumes that there's a file
+                    // 1. This check assumes that there's a file
                     // present without form data. If form data
                     // is present, this method immediately fails
                     // and returns the model error.
-                    if (!MultipartRequestHelper
-                        .HasFileContentDisposition(contentDisposition))
+                    // 2. also check there is a tag correspond to the file
+                    if (!MultipartRequestHelper.HasFileContentDisposition(contentDisposition) || i >= tags.Count)
                     {
                         // 记录上传失败的文件
                         failedUploads.Add(new UploadInfoDto { Name = contentDisposition.FileName.Value, Index = i });
@@ -99,9 +99,9 @@ namespace FileService.File.API.Controllers
                         //var trustedFileNameForFileStorage = Path.GetRandomFileName();
                         var trustedFileNameForFileStorage = trustedFileNameForDisplay;
 
-                        var fileInfo = fileInfos.FirstOrDefault(fi => fi.Name == trustedFileNameForFileStorage);
+                        var fileInfo = await _fileInfoRepository.GetFileInfoByNameAsync(trustedFileNameForFileStorage);
 
-                        if ((await _fileInfoRepository.GetFileInfoByNameAsync(trustedFileNameForFileStorage)) == null && fileInfo != null)
+                        if (fileInfo == null)
                         {
                             // 文件不存在，保存文件并记录到数据库
                             // **WARNING!**
@@ -125,7 +125,7 @@ namespace FileService.File.API.Controllers
                             }
                             else
                             {
-                                var folder = Path.Combine(_streamingSettings.Value.StoredFilesPath, fileInfo.Tag.ToString().ToLower());
+                                var folder = Path.Combine(_streamingSettings.Value.StoredFilesPath, tags[i].ToString().ToLower());
                                 Directory.CreateDirectory(folder);
 
                                 using (var targetStream = System.IO.File.Create(Path.Combine(folder, trustedFileNameForFileStorage)))
@@ -150,11 +150,8 @@ namespace FileService.File.API.Controllers
                         }
                         else
                         {
-                            if (fileInfo == null)
-                                failedUploads.Add(new UploadInfoDto { Name = trustedFileNameForFileStorage, Index = i });
-                            else
-                                // 文件已存在，直接记录为上传成功
-                                successUploads.Add(new UploadInfoDto { Name = trustedFileNameForFileStorage, Index = i });
+                            // 文件已存在，直接记录为上传成功
+                            successUploads.Add(new UploadInfoDto { Name = trustedFileNameForFileStorage, Index = i });
                         }
                     }
                 }
