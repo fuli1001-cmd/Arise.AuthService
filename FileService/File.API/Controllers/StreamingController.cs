@@ -81,6 +81,8 @@ namespace FileService.File.API.Controllers
 
                 if (hasContentDispositionHeader)
                 {
+                    _logger.LogInformation($"Uploading file {contentDisposition.FileName.Value}.");
+
                     // 1. This check assumes that there's a file
                     // present without form data. If form data
                     // is present, this method immediately fails
@@ -88,6 +90,11 @@ namespace FileService.File.API.Controllers
                     // 2. also check there is a tag correspond to the file
                     if (!MultipartRequestHelper.HasFileContentDisposition(contentDisposition) || i >= tags.Count)
                     {
+                        if (i >= tags.Count)
+                            _logger.LogError($"Upload file {contentDisposition.FileName.Value} failed, no conresponding tag.");
+                        else
+                            _logger.LogError($"Upload file {contentDisposition.FileName.Value} failed, no file content disposition.");
+
                         // 记录上传失败的文件
                         failedUploads.Add(new UploadInfoDto { Name = contentDisposition.FileName.Value, Index = i });
                     }
@@ -122,6 +129,8 @@ namespace FileService.File.API.Controllers
                                 // 记录上传失败的文件
                                 failedUploads.Add(new UploadInfoDto { Name = trustedFileNameForFileStorage, Index = i });
                                 ModelState.Clear();
+
+                                _logger.LogError($"Upload file {contentDisposition.FileName.Value} failed.");
                             }
                             else
                             {
@@ -152,6 +161,7 @@ namespace FileService.File.API.Controllers
                         {
                             // 文件已存在，直接记录为上传成功
                             successUploads.Add(new UploadInfoDto { Name = trustedFileNameForFileStorage, Index = i });
+                            _logger.LogInformation($"File {trustedFileNameForFileStorage} already exists in database, skip.");
                         }
                     }
                 }
