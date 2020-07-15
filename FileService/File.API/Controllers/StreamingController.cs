@@ -81,8 +81,6 @@ namespace FileService.File.API.Controllers
 
                 if (hasContentDispositionHeader)
                 {
-                    _logger.LogInformation($"Uploading file {contentDisposition.FileName.Value}.");
-
                     // 1. This check assumes that there's a file
                     // present without form data. If form data
                     // is present, this method immediately fails
@@ -100,6 +98,8 @@ namespace FileService.File.API.Controllers
                     }
                     else
                     {
+                        _logger.LogInformation($"Uploading file {contentDisposition.FileName.Value} with tag {tags[i]}.");
+
                         // Don't trust the file name sent by the client. To display
                         // the file name, HTML-encode the value.
                         var trustedFileNameForDisplay = WebUtility.HtmlEncode(contentDisposition.FileName.Value);
