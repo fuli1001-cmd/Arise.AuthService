@@ -60,6 +60,8 @@ namespace FileService.File.API.Controllers
         [DisableFormValueModelBinding]
         public async Task<IActionResult> UploadPhysical([ModelBinder(BinderType = typeof(JsonModelBinder))] List<FileTag> tags)
         {
+            _logger.LogInformation("File tags: {FileTags}", tags);
+
             var i = 0;
             var successUploads = new List<UploadInfoDto>();
             var failedUploads = new List<UploadInfoDto>();
@@ -86,9 +88,9 @@ namespace FileService.File.API.Controllers
                     // is present, this method immediately fails
                     // and returns the model error.
                     // 2. also check there is a tag correspond to the file
-                    if (!MultipartRequestHelper.HasFileContentDisposition(contentDisposition) || i >= tags.Count)
+                    if (!MultipartRequestHelper.HasFileContentDisposition(contentDisposition) || tags == null || i >= tags.Count)
                     {
-                        if (i >= tags.Count)
+                        if (tags == null || i >= tags.Count)
                             _logger.LogError($"Upload file {contentDisposition.FileName.Value} failed, no conresponding tag.");
                         else
                             _logger.LogError($"Upload file {contentDisposition.FileName.Value} failed, no file content disposition.");
