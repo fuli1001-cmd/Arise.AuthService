@@ -58,6 +58,8 @@ namespace FileService.File.API.Controllers
         // https://github.com/BrunoZell/JsonModelBinder
         [HttpPost]
         [DisableFormValueModelBinding]
+        [RequestFormLimits(MultipartBodyLengthLimit = 209715200)]
+        [RequestSizeLimit(209715200)]
         public async Task<IActionResult> UploadPhysical([ModelBinder(BinderType = typeof(JsonModelBinder))] List<FileTag> tags)
         {
             _logger.LogInformation("File tags: {FileTags}", tags);
@@ -124,7 +126,7 @@ namespace FileService.File.API.Controllers
 
                             var streamedFileContent = await FileHelpers.ProcessStreamedFile(
                                 section, contentDisposition, ModelState,
-                                _permittedExtensions, _streamingSettings.Value.FileSizeLimit);
+                                _permittedExtensions, 0);
 
                             if (!ModelState.IsValid)
                             {
