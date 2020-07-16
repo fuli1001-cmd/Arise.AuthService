@@ -126,7 +126,7 @@ namespace FileService.File.API.Controllers
 
                             var streamedFileContent = await FileHelpers.ProcessStreamedFile(
                                 section, contentDisposition, ModelState,
-                                _permittedExtensions, 0);
+                                _permittedExtensions, _streamingSettings.Value.FileSizeLimit);
 
                             if (!ModelState.IsValid)
                             {

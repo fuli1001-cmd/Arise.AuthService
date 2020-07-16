@@ -162,12 +162,12 @@ namespace FileService.File.API.Utilities
                     {
                         modelState.AddModelError("File", "The file is empty.");
                     }
-                    //else if (memoryStream.Length > sizeLimit)
-                    //{
-                    //    var megabyteSizeLimit = sizeLimit / 1048576;
-                    //    modelState.AddModelError("File",
-                    //    $"The file exceeds {megabyteSizeLimit:N1} MB.");
-                    //}
+                    else if (memoryStream.Length > sizeLimit)
+                    {
+                        var megabyteSizeLimit = sizeLimit / 1048576;
+                        modelState.AddModelError("File",
+                        $"The file exceeds {megabyteSizeLimit:N1} MB.");
+                    }
                     //else if (!IsValidFileExtensionAndSignature(
                     //    contentDisposition.FileName.Value, memoryStream,
                     //    permittedExtensions))
