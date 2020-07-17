@@ -9,6 +9,7 @@ using FileService.File.API.Utilities;
 using FileService.File.Domain.AggregatesModel.FileInfoAggregate;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
@@ -139,9 +140,15 @@ namespace FileService.File.API.Controllers
                             }
                             else
                             {
-                                var folder = Path.Combine(_streamingSettings.Value.StoredFilesPath, tags?[i].ToString().ToLower() ?? string.Empty);
-                                Directory.CreateDirectory(folder);
+                                var folder = tags == null ? _streamingSettings.Value.StoredFilesPath : GetFolderByTag(tags[i]);
+                                //var folder = Path.Combine(_streamingSettings.Value.StoredFilesPath, tags?[i].ToString().ToLower() ?? string.Empty);
+
+                                _logger.LogInformation("folder: {folder}", folder);
+
+                                //Directory.CreateDirectory(folder);
                                 var filePath = Path.Combine(folder, trustedFileNameForFileStorage);
+
+                                _logger.LogInformation("Save file at path: {filePath}", filePath);
 
                                 // 文件写入文件系统
                                 using (var targetStream = System.IO.File.Create(filePath))
@@ -159,38 +166,46 @@ namespace FileService.File.API.Controllers
                                 // 向前兼容：拷贝文件
                                 if (tags == null)
                                 {
-                                    var distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.App.ToString().ToLower());
+                                    //var distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.App.ToString().ToLower());
+                                    var distFolder = GetFolderByTag(FileTag.App);
                                     System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
                                     _logger.LogInformation($"Copied file {filePath} to {distFolder}");
 
-                                    distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.AppOriginal.ToString().ToLower());
+                                    //distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.AppOriginal.ToString().ToLower());
+                                    distFolder = GetFolderByTag(FileTag.AppOriginal);
                                     System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
                                     _logger.LogInformation($"Copied file {filePath} to {distFolder}");
 
-                                    distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.AppThumbnail.ToString().ToLower());
+                                    //distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.AppThumbnail.ToString().ToLower());
+                                    distFolder = GetFolderByTag(FileTag.AppThumbnail);
                                     System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
                                     _logger.LogInformation($"Copied file {filePath} to {distFolder}");
 
-                                    distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.AppVideo.ToString().ToLower());
+                                    //distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.AppVideo.ToString().ToLower());
+                                    distFolder = GetFolderByTag(FileTag.AppVideo);
                                     System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
                                     _logger.LogInformation($"Copied file {filePath} to {distFolder}");
 
-                                    distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.Chat.ToString().ToLower());
+                                    //distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.Chat.ToString().ToLower());
+                                    distFolder = GetFolderByTag(FileTag.Chat);
                                     System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
                                     _logger.LogInformation($"Copied file {filePath} to {distFolder}");
 
-                                    distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.ChatThumbnail.ToString().ToLower());
+                                    //distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.ChatThumbnail.ToString().ToLower());
+                                    distFolder = GetFolderByTag(FileTag.ChatThumbnail);
                                     System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
                                     _logger.LogInformation($"Copied file {filePath} to {distFolder}");
 
-                                    distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.ChatVideo.ToString().ToLower());
+                                    //distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.ChatVideo.ToString().ToLower());
+                                    distFolder = GetFolderByTag(FileTag.ChatVideo);
                                     System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
                                     _logger.LogInformation($"Copied file {filePath} to {distFolder}");
                                 }
                                 else
                                 {
-                                    System.IO.File.Copy(filePath, Path.Combine(_streamingSettings.Value.StoredFilesPath, trustedFileNameForFileStorage), true);
-                                    _logger.LogInformation($"Copied file {filePath} to {_streamingSettings.Value.StoredFilesPath}");
+                                    var distFolder = _streamingSettings.Value.StoredFilesPath;
+                                    System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
+                                    _logger.LogInformation($"Copied file {filePath} to {distFolder}");
                                 }
 
                                 _logger.LogInformation(
@@ -232,9 +247,9 @@ namespace FileService.File.API.Controllers
             }
         }
 
-        private void CopyFileToFolder(string fileName, string srcFolder, string distFolder)
+        private string GetFolderByTag(FileTag tag)
         {
-
+            return _streamingSettings.Value.GetType().GetProperty(tag.ToString()).GetValue(_streamingSettings.Value, null).ToString();
         }
     }
 }
