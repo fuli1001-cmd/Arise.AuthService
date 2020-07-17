@@ -80,8 +80,6 @@ namespace FileService.File.API.Controllers
 
             while (section != null)
             {
-                _logger.LogInformation("********************************* " + i);
-
                 var hasContentDispositionHeader =
                     ContentDispositionHeaderValue.TryParse(
                         section.ContentDisposition, out var contentDisposition);
@@ -93,9 +91,9 @@ namespace FileService.File.API.Controllers
                     // is present, this method immediately fails
                     // and returns the model error.
                     // 2. also check there is a tag correspond to the file
-                    if (!MultipartRequestHelper.HasFileContentDisposition(contentDisposition) || tags == null || i >= tags.Count)
+                    if (!MultipartRequestHelper.HasFileContentDisposition(contentDisposition) || (tags != null && i >= tags.Count))
                     {
-                        if (tags == null || i >= tags.Count)
+                        if (tags != null && i >= tags.Count)
                             _logger.LogError($"Upload file {contentDisposition.FileName.Value} failed, no conresponding tag.");
                         else
                             _logger.LogError($"Upload file {contentDisposition.FileName.Value} failed, no file content disposition.");
@@ -105,7 +103,7 @@ namespace FileService.File.API.Controllers
                     }
                     else
                     {
-                        _logger.LogInformation($"Uploading file {contentDisposition.FileName.Value} with tag {tags[i]}.");
+                        _logger.LogInformation($"Uploading file {contentDisposition.FileName.Value} with tag {tags?[i].ToString() ?? "N/A"}.");
 
                         // Don't trust the file name sent by the client. To display
                         // the file name, HTML-encode the value.
@@ -113,7 +111,7 @@ namespace FileService.File.API.Controllers
                         //var trustedFileNameForFileStorage = Path.GetRandomFileName();
                         var trustedFileNameForFileStorage = trustedFileNameForDisplay;
 
-                        var fileInfo = await _fileInfoRepository.GetFileInfoAsync(trustedFileNameForFileStorage, tags[i]);
+                        var fileInfo = tags == null ? null : await _fileInfoRepository.GetFileInfoAsync(trustedFileNameForFileStorage, tags[i]);
 
                         if (fileInfo == null)
                         {
@@ -141,27 +139,65 @@ namespace FileService.File.API.Controllers
                             }
                             else
                             {
-                                var folder = Path.Combine(_streamingSettings.Value.StoredFilesPath, tags[i].ToString().ToLower());
+                                var folder = Path.Combine(_streamingSettings.Value.StoredFilesPath, tags?[i].ToString().ToLower() ?? string.Empty);
                                 Directory.CreateDirectory(folder);
+                                var filePath = Path.Combine(folder, trustedFileNameForFileStorage);
 
-                                using (var targetStream = System.IO.File.Create(Path.Combine(folder, trustedFileNameForFileStorage)))
+                                // 文件写入文件系统
+                                using (var targetStream = System.IO.File.Create(filePath))
                                 {
-                                    // 文件写入文件系统
                                     await targetStream.WriteAsync(streamedFileContent);
-
-                                    // 文件信息存入到数据库中
-                                    var command = new CreateFileInfoCommand { Name = trustedFileNameForFileStorage };
-                                    await _mediator.Send(command);
-
-                                    // 记录上传成功的文件
-                                    successUploads.Add(new UploadInfoDto { Name = trustedFileNameForFileStorage, Index = i });
-
-                                    _logger.LogInformation(
-                                        "Uploaded file '{TrustedFileNameForDisplay}' saved to " +
-                                        "'{TargetFilePath}' as {TrustedFileNameForFileStorage}",
-                                        trustedFileNameForDisplay, folder,
-                                        trustedFileNameForFileStorage);
                                 }
+
+                                // 文件信息存入到数据库中
+                                var command = new CreateFileInfoCommand { Name = trustedFileNameForFileStorage };
+                                await _mediator.Send(command);
+
+                                // 记录上传成功的文件
+                                successUploads.Add(new UploadInfoDto { Name = trustedFileNameForFileStorage, Index = i });
+
+                                // 向前兼容：拷贝文件
+                                if (tags == null)
+                                {
+                                    var distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.App.ToString());
+                                    System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
+                                    _logger.LogInformation($"Copied file {filePath} to {distFolder}");
+
+                                    distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.AppOriginal.ToString());
+                                    System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
+                                    _logger.LogInformation($"Copied file {filePath} to {distFolder}");
+
+                                    distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.AppThumbnail.ToString());
+                                    System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
+                                    _logger.LogInformation($"Copied file {filePath} to {distFolder}");
+
+                                    distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.AppVideo.ToString());
+                                    System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
+                                    _logger.LogInformation($"Copied file {filePath} to {distFolder}");
+
+                                    distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.Chat.ToString());
+                                    System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
+                                    _logger.LogInformation($"Copied file {filePath} to {distFolder}");
+
+                                    distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.ChatThumbnail.ToString());
+                                    System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
+                                    _logger.LogInformation($"Copied file {filePath} to {distFolder}");
+
+                                    distFolder = Path.Combine(_streamingSettings.Value.StoredFilesPath, FileTag.ChatVideo.ToString());
+                                    System.IO.File.Copy(filePath, Path.Combine(distFolder, trustedFileNameForFileStorage), true);
+                                    _logger.LogInformation($"Copied file {filePath} to {distFolder}");
+                                }
+                                else
+                                {
+                                    System.IO.File.Copy(filePath, Path.Combine(_streamingSettings.Value.StoredFilesPath, trustedFileNameForFileStorage), true);
+                                    _logger.LogInformation($"Copied file {filePath} to {_streamingSettings.Value.StoredFilesPath}");
+                                }
+
+                                _logger.LogInformation(
+                                    "Uploaded file '{TrustedFileNameForDisplay}' saved to " +
+                                    "'{TargetFilePath}' as {TrustedFileNameForFileStorage}",
+                                    trustedFileNameForDisplay, folder,
+                                    trustedFileNameForFileStorage);
                             }
                         }
                         else
@@ -194,6 +230,11 @@ namespace FileService.File.API.Controllers
                 _logger.LogInformation("********************************* return 2");
                 return Ok(ResponseWrapper.CreateOkResponseWrapper(uploadStatus));
             }
+        }
+
+        private void CopyFileToFolder(string fileName, string srcFolder, string distFolder)
+        {
+
         }
     }
 }
