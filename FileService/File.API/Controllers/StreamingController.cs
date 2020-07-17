@@ -175,6 +175,19 @@ namespace FileService.File.API.Controllers
                 i++;
                 // Drain any remaining section body that hasn't been consumed and
                 // read the headers for the next section.
+                var timeoutTask = Task.Delay(TimeSpan.FromSeconds(1));
+                var readNextSectionTask = reader.ReadNextSectionAsync();
+
+                if (await Task.WhenAny(timeoutTask, readNextSectionTask).ConfigureAwait(false) == timeoutTask)
+                {
+                    _logger.LogInformation("********************************* return 3");
+                    break;
+                }
+                else
+                {
+                    section = await readNextSectionTask;
+                }
+
                 section = await reader.ReadNextSectionAsync();
 
                 _logger.LogInformation("********************************* ReadNextSectionAsync finished");
