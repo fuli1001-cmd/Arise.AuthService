@@ -28,7 +28,10 @@ namespace FileService.File.Domain.AggregatesModel.FileInfoAggregate
     {
         App,
         AppThumbnail,
+        AppVideo,
+        AppOriginal,
         Chat,
-        ChatThumbnail
+        ChatThumbnail,
+        ChatVideo
     }
 }
