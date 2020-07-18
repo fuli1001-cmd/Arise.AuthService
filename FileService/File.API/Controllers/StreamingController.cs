@@ -228,23 +228,15 @@ namespace FileService.File.API.Controllers
                 // Drain any remaining section body that hasn't been consumed and
                 // read the headers for the next section.
                 section = await reader.ReadNextSectionAsync();
-
-                _logger.LogInformation("********************************* ReadNextSectionAsync finished");
             }
 
             //return Created(nameof(StreamingController), null);
             var uploadStatus = new UploadStatusDto { SuccessUploads = successUploads, FailedUploads = failedUploads };
             if (failedUploads.Count > 0)
-            {
-                _logger.LogInformation("********************************* return 1");
                 return StatusCode((int)HttpStatusCode.BadRequest,
                     ResponseWrapper.CreateErrorResponseWrapper(Arise.DDD.API.Response.StatusCode.ClientError, "Upload Failed.", null, uploadStatus));
-            }
             else
-            {
-                _logger.LogInformation("********************************* return 2");
                 return Ok(ResponseWrapper.CreateOkResponseWrapper(uploadStatus));
-            }
         }
 
         private string GetFolderByTag(FileTag tag)
