@@ -1,6 +1,7 @@
 ﻿using Arise.DDD.Infrastructure.ServiceDiscovery;
 using Consul;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -27,11 +28,14 @@ namespace Arise.DDD.Infrastructure.Extensions
             });
         }
 
-        public static IConsulClient AddConsulClient(this IServiceCollection services, ServiceConfig serviceConfig)
+        public static IConsulClient AddConsulClient(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<ConsulConfig>(configuration.GetSection("ConsulConfig"));
+
             var consulClient = new ConsulClient(config =>
             {
-                config.Address = new Uri(serviceConfig.ServiceDiscoveryAddress);
+                var address = configuration["ConsulConfig:ServiceDiscoveryAddress"];
+                config.Address = new Uri(address);
             });
 
             services.AddSingleton<IConsulClient, ConsulClient>(p => consulClient);

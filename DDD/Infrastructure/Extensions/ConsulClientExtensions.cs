@@ -9,27 +9,27 @@ namespace Arise.DDD.Infrastructure.Extensions
 {
     public static class ConsulClientExtensions
     {
-        public static async Task RegisterServicesAsync(this IConsulClient consulClient, ServiceConfig serviceConfig)
+        public static void RegisterService(this IConsulClient consulClient, ConsulConfig consulConfig)
         {
-            var registrationId = $"{serviceConfig.ServiceName}-{serviceConfig.ServiceId}";
-            var serviceAddress = new Uri(serviceConfig.ServiceAddress);
+            var registrationId = $"{consulConfig.ServiceName}-{consulConfig.ServiceId}";
+            var serviceAddress = new Uri(consulConfig.ServiceAddress);
 
             var registration = new AgentServiceRegistration
             {
                 ID = registrationId,
-                Name = serviceConfig.ServiceName,
+                Name = consulConfig.ServiceName,
                 Address = serviceAddress.Host,
                 Port = serviceAddress.Port
             };
 
-            await consulClient.Agent.ServiceDeregister(registration.ID);
-            await consulClient.Agent.ServiceRegister(registration);
+            consulClient.Agent.ServiceDeregister(registration.ID).Wait();
+            consulClient.Agent.ServiceRegister(registration).Wait();
         }
 
-        public static async Task DeregisterServicesAsync(this IConsulClient consulClient, ServiceConfig serviceConfig)
+        public static void DeregisterService(this IConsulClient consulClient, ConsulConfig consulConfig)
         {
-            var registrationId = $"{serviceConfig.ServiceName}-{serviceConfig.ServiceId}";
-            await consulClient.Agent.ServiceDeregister(registrationId);
+            var registrationId = $"{consulConfig.ServiceName}-{consulConfig.ServiceId}";
+            consulClient.Agent.ServiceDeregister(registrationId).Wait();
         }
     }
 }

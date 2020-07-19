@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Arise.DDD.Infrastructure.ServiceDiscovery
 {
-    public class ServiceConfig
+    public class ConsulConfig
     {
         public string ServiceDiscoveryAddress { get; set; }
         public string ServiceAddress { get; set; }
