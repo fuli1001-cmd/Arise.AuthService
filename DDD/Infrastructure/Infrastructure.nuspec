@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Arise.DDD.Infrastructure</id>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
     <title>$title$</title>
     <authors>Arise</authors>
     <owners>$author$</owners>
@@ -11,7 +11,7 @@
     <projectUrl>http://project_url_here_or_delete_this_line/</projectUrl>
     <iconUrl>http://icon_url_here_or_delete_this_line/</iconUrl>
     <description>Arise DDD Infrastructure</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <releaseNotes>Add service discovery function.</releaseNotes>
     <copyright>Copyright 2020</copyright>
     <tags>Tag1 Tag2</tags>
   </metadata>
