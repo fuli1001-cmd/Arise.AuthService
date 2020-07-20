@@ -2,4 +2,4 @@
 **/upload
 **/bin
 **/obj
-FileUploadService/Properties/PublishProfiles/
+FileService/File.API/Properties/PublishProfiles

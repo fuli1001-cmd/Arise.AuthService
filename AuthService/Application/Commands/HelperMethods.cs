@@ -53,6 +53,8 @@ namespace AuthService.Application.Commands
 
             if (enError.Contains("Incorrect password"))
                 cnError = "密码错误";
+            else if (enError.Contains("Passwords must have at least one digit"))
+                cnError = "密码至少包含一位数字";
 
             return cnError;
         }
