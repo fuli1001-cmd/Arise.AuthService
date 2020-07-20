@@ -24,7 +24,7 @@ namespace FileService.File.API.Application.Commands.CreateFileInfo
 
         public async Task<bool> Handle(CreateFileInfoCommand request, CancellationToken cancellationToken)
         {
-            var fi = new FileInfo(request.Name);
+            var fi = new FileInfo(request.Name, request.FileTag);
             _fileInfoRepository.Add(fi);
             return await _fileInfoRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
         }

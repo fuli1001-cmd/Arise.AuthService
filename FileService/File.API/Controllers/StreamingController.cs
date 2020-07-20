@@ -157,7 +157,7 @@ namespace FileService.File.API.Controllers
                                 }
 
                                 // 文件信息存入到数据库中
-                                var command = new CreateFileInfoCommand { Name = trustedFileNameForFileStorage };
+                                var command = new CreateFileInfoCommand { Name = trustedFileNameForFileStorage, FileTag = tags[i] };
                                 await _mediator.Send(command);
 
                                 // 记录上传成功的文件

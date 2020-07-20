@@ -18,9 +18,10 @@ namespace FileService.File.Domain.AggregatesModel.FileInfoAggregate
             CreatedTime = DateTime.UtcNow;
         }
 
-        public FileInfo(string name) : this()
+        public FileInfo(string name, FileTag tag) : this()
         {
             Name = name;
+            Tag = tag;
         }
     }
 
