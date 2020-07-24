@@ -185,11 +185,16 @@ namespace FileService.File.API.Application.Services
         {
             DateTime now = DateTime.UtcNow;
             DateTime firstRun = new DateTime(now.Year, now.Month, now.Day, hour, min, 0, 0);
+
+            _logger.LogInformation("******************** now: {@now}, firstRun: {@firstRun}", now, firstRun);
+
             if (now > firstRun)
             {
+                _logger.LogInformation("********************** 1");
                 firstRun = firstRun.AddDays(1);
             }
             TimeSpan timeToGo = firstRun - now;
+
             _timer = new Timer(x =>
             {
                 task.Invoke();
