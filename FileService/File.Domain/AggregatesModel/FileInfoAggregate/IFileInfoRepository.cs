@@ -25,9 +25,10 @@ namespace FileService.File.Domain.AggregatesModel.FileInfoAggregate
         Task<List<FileInfo>> GetNotUsedAppVideosAsync(FileTag tag);
 
         /// <summary>
-        /// 获取聊天相关的文件数据
+        /// 获取所有早于指定时间的聊天文件
         /// </summary>
+        /// <param name="oldestTime">早于此时间的文件会被删除</param>
         /// <returns></returns>
-        Task<List<FileInfo>> GetAllChatFileInfosAsync();
+        Task<List<FileInfo>> GetAllChatFileInfosAsync(DateTime oldestTime);
     }
 }

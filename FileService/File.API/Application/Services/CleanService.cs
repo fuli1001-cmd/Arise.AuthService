@@ -99,6 +99,7 @@ namespace FileService.File.API.Application.Services
             {
                 var repository = scope.ServiceProvider.GetRequiredService<IFileInfoRepository>();
 
+                // 类别传任意一种聊天类别即可删除所有聊天文件
                 await CleanFilesWithTagAsync(FileTag.Chat, repository);
 
                 await repository.UnitOfWork.SaveEntitiesAsync();
@@ -130,7 +131,8 @@ namespace FileService.File.API.Application.Services
                 case FileTag.Chat:
                 case FileTag.ChatThumbnail:
                 case FileTag.ChatVideo:
-                    notUsedFileInfos = await repository.GetAllChatFileInfosAsync();
+                    var oldestTime = DateTime.UtcNow.AddHours(-_chatCleanSettings.IntervalHours);
+                    notUsedFileInfos = await repository.GetAllChatFileInfosAsync(oldestTime);
                     break;
 
                 default:
@@ -139,7 +141,17 @@ namespace FileService.File.API.Application.Services
 
             notUsedFileInfos.ForEach(fi =>
             {
-                if (DeleteFile(fi.Name, tag))
+                var delResult = false;
+
+                // 由于聊天文件是统一删除，因此如果类别是聊天中的任意一种，则删除所有聊天文件
+                // app内文件按传入类别删除
+                if (tag == FileTag.Chat || tag == FileTag.ChatThumbnail || tag == FileTag.ChatVideo)
+                    delResult = DeleteFile(fi.Name, FileTag.Chat) && DeleteFile(fi.Name, FileTag.ChatThumbnail) && DeleteFile(fi.Name, FileTag.ChatVideo);
+                else 
+                    delResult = DeleteFile(fi.Name, tag);
+
+                // 如果删除文件成功则删除数据库数据
+                if (delResult)
                     repository.Remove(fi);
             });
         }
