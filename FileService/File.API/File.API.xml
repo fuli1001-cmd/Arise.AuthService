@@ -22,7 +22,7 @@
         </member>
         <member name="M:FileService.File.API.Application.Services.CleanService.ScheduleTask(System.Int32,System.Int32,System.Double,System.Action)">
             <summary>
-            在指定时间以指定间隔重复执行一个任务
+            在指定的UTC时间以指定间隔重复执行一个任务
             </summary>
             <param name="hour">任务开始执行的时间点（小时）</param>
             <param name="min">任务开始执行的时间点（分钟）</param>

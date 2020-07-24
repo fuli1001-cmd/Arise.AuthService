@@ -41,20 +41,15 @@ namespace FileService.File.API.Application.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("**********************{@AppCleanSettings}", _appCleanSettings);
-            _logger.LogInformation("**********************{@ChatCleanSettings}", _chatCleanSettings);
-
             // 清理程序内文件
             ScheduleTask(_appCleanSettings.StartHour, _appCleanSettings.StartMinute, _appCleanSettings.IntervalHours, async () =>
             {
-                _logger.LogInformation("clean app task start");
-
                 Program.StreamingMre.WaitOne();
                 Program.CleanAppMre.Reset();
 
                 _logger.LogInformation("start clean app files");
 
-                try { await CleanAppAsync(); await Task.Delay(TimeSpan.FromSeconds(_appCleanSettings.DelaySeconds)); }
+                try { await CleanAppAsync(); }
                 catch { throw; }
                 finally 
                 { 
@@ -66,14 +61,12 @@ namespace FileService.File.API.Application.Services
             // 清理聊天文件
             ScheduleTask(_chatCleanSettings.StartHour, _chatCleanSettings.StartMinute, _chatCleanSettings.IntervalHours, async () =>
             {
-                _logger.LogInformation("clean chat task start");
-
                 Program.StreamingMre.WaitOne();
                 Program.CleanChatMre.Reset();
 
                 _logger.LogInformation("start clean chat files");
 
-                try { await CleanChatAsync(); await Task.Delay(TimeSpan.FromSeconds(_chatCleanSettings.DelaySeconds)); }
+                try { await CleanChatAsync(); }
                 catch { throw; }
                 finally
                 {
@@ -165,6 +158,7 @@ namespace FileService.File.API.Application.Services
             try
             {
                 System.IO.File.Delete(filePath);
+                _logger.LogError("deleted {File}", filePath);
                 return true;
             }
             catch(Exception ex)
@@ -181,7 +175,7 @@ namespace FileService.File.API.Application.Services
         }
 
         /// <summary>
-        /// 在指定时间以指定间隔重复执行一个任务
+        /// 在指定的UTC时间以指定间隔重复执行一个任务
         /// </summary>
         /// <param name="hour">任务开始执行的时间点（小时）</param>
         /// <param name="min">任务开始执行的时间点（分钟）</param>
@@ -189,7 +183,7 @@ namespace FileService.File.API.Application.Services
         /// <param name="task">要执行的任务</param>
         private void ScheduleTask(int hour, int min, double intervalHours, Action task)
         {
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.UtcNow;
             DateTime firstRun = new DateTime(now.Year, now.Month, now.Day, hour, min, 0, 0);
             if (now > firstRun)
             {

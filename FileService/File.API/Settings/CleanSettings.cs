@@ -15,8 +15,6 @@ namespace FileService.File.API.Settings
 
         // 清理间隔小时数
         public int IntervalHours { get; set; }
-
-        public int DelaySeconds { get; set; }
     }
 
     // 程序内部文件清理设置
