@@ -131,6 +131,7 @@ namespace FileService.File.API.Application.Services
                 case FileTag.Chat:
                 case FileTag.ChatThumbnail:
                 case FileTag.ChatVideo:
+                    // 删除早于距当前时间超过任务执行间隔的聊天文件
                     var oldestTime = DateTime.UtcNow.AddHours(-_chatCleanSettings.IntervalHours);
                     notUsedFileInfos = await repository.GetAllChatFileInfosAsync(oldestTime);
                     break;

@@ -27,7 +27,7 @@ namespace FileService.File.Domain.AggregatesModel.FileInfoAggregate
         /// <summary>
         /// 获取所有早于指定时间的聊天文件
         /// </summary>
-        /// <param name="oldestTime">早于此时间的文件会被删除</param>
+        /// <param name="oldestTime">指定的时间点</param>
         /// <returns></returns>
         Task<List<FileInfo>> GetAllChatFileInfosAsync(DateTime oldestTime);
     }
