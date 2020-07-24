@@ -41,9 +41,14 @@ namespace FileService.File.API.Application.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _logger.LogInformation("**********************{@AppCleanSettings}", _appCleanSettings);
+            _logger.LogInformation("**********************{@ChatCleanSettings}", _chatCleanSettings);
+
             // 清理程序内文件
             ScheduleTask(_appCleanSettings.StartHour, _appCleanSettings.StartMinute, _appCleanSettings.IntervalHours, async () =>
             {
+                _logger.LogInformation("clean app task start");
+
                 Program.StreamingMre.WaitOne();
                 Program.CleanAppMre.Reset();
 
@@ -61,6 +66,8 @@ namespace FileService.File.API.Application.Services
             // 清理聊天文件
             ScheduleTask(_chatCleanSettings.StartHour, _chatCleanSettings.StartMinute, _chatCleanSettings.IntervalHours, async () =>
             {
+                _logger.LogInformation("clean chat task start");
+
                 Program.StreamingMre.WaitOne();
                 Program.CleanChatMre.Reset();
 

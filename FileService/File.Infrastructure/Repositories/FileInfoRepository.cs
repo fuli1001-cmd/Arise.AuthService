@@ -29,12 +29,12 @@ namespace FileService.File.Infrastructure.Repositories
 
         public Task<List<FileInfo>> GetNotUsedAppImagesAsync(FileTag tag)
         {
-            return _context.FileInfos.FromSqlRaw("EXECUTE dbo.getNotUsedImages {0}", tag).ToListAsync();
+            return _context.FileInfos.FromSqlRaw("EXECUTE dbo.GetNotUsedAppImages {0}", tag).ToListAsync();
         }
 
         public Task<List<FileInfo>> GetNotUsedAppVideosAsync(FileTag tag)
         {
-            return _context.FileInfos.FromSqlRaw("EXECUTE dbo.GetNotUsedVideos {0}", tag).ToListAsync();
+            return _context.FileInfos.FromSqlRaw("EXECUTE dbo.GetNotUsedAppVideos {0}", tag).ToListAsync();
         }
     }
 }
