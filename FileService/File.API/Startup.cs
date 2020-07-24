@@ -10,6 +10,7 @@ using Autofac;
 using File.Infrastructure;
 using FileService.File.API.Application.Behaviors;
 using FileService.File.API.Application.Commands.CreateFileInfo;
+using FileService.File.API.Application.Services;
 using FileService.File.API.Filters;
 using FileService.File.API.Infrastructure.AutofacModules;
 using FileService.File.API.Settings;
@@ -85,6 +86,8 @@ namespace FileService.File.API
                 c.IncludeXmlComments(string.Format(@"{0}/File.API.xml", System.AppDomain.CurrentDomain.BaseDirectory));
                 c.DescribeAllEnumsAsStrings();
             });
+
+            services.AddHostedService<CleanService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
