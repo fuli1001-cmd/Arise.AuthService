@@ -49,7 +49,7 @@ namespace FileService.File.API.Application.Services
 
                 _logger.LogInformation("start clean app files");
 
-                try { await CleanAppAsync(); }
+                try { await CleanAppAsync(); await Task.Delay(TimeSpan.FromSeconds(_appCleanSettings.DelaySeconds)); }
                 catch { throw; }
                 finally 
                 { 
@@ -66,7 +66,7 @@ namespace FileService.File.API.Application.Services
 
                 _logger.LogInformation("start clean chat files");
 
-                try { await CleanChatAsync(); }
+                try { await CleanChatAsync(); await Task.Delay(TimeSpan.FromSeconds(_chatCleanSettings.DelaySeconds)); }
                 catch { throw; }
                 finally
                 {
