@@ -52,6 +52,8 @@ namespace FileService.File.API
                 });
 
             services.Configure<StreamingSettings>(Configuration.GetSection("StreamingSettings"));
+            services.Configure<AppCleanSettings>(Configuration.GetSection("AppCleanSettings"));
+            services.Configure<ChatCleanSettings>(Configuration.GetSection("ChatCleanSettings"));
 
             services.AddMediatR(typeof(CreateFileInfoCommandHandler));
 

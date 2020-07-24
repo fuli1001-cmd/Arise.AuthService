@@ -27,13 +27,11 @@ jobs:
         
       - name: Tags
         run: |
-          docker tag arise-authservice ${{ secrets.DOCKER_USER }}/arise-authservice:${{ github.sha }}
-          docker tag arise-authservice ${{ secrets.DOCKER_USER }}/arise-authservice:linux
+          docker tag arise-authservice ${{ secrets.DOCKER_USER }}/arise-authservice:test
           
       - name: Push
         run: |
-          docker push ${{ secrets.DOCKER_USER }}/arise-authservice:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_USER }}/arise-authservice:linux
+          docker push ${{ secrets.DOCKER_USER }}/arise-authservice:test
           
       - name: Deploy
         uses: garygrossgarten/github-action-ssh@release

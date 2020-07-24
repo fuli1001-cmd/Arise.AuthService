@@ -28,12 +28,12 @@ jobs:
       - name: Tags
         run: |
           docker tag arise-fileservice ${{ secrets.DOCKER_USER }}/arise-fileservice:${{ github.sha }}
-          docker tag arise-fileservice ${{ secrets.DOCKER_USER }}/arise-fileservice:linux
+          docker tag arise-fileservice ${{ secrets.DOCKER_USER }}/arise-fileservice:latest
           
       - name: Push
         run: |
           docker push ${{ secrets.DOCKER_USER }}/arise-fileservice:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_USER }}/arise-fileservice:linux
+          docker push ${{ secrets.DOCKER_USER }}/arise-fileservice:latest
           
       - name: Deploy
         uses: garygrossgarten/github-action-ssh@release

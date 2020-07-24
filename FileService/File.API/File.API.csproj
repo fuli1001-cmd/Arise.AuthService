@@ -36,4 +36,9 @@
   <ItemGroup>
     <Folder Include="Infrastructure\Migrations\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="File.API.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

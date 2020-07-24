@@ -4,5 +4,30 @@
         <name>File.API</name>
     </assembly>
     <members>
+        <member name="M:FileService.File.API.Application.Services.CleanService.CleanFilesWithTagAsync(FileService.File.Domain.AggregatesModel.FileInfoAggregate.FileTag,FileService.File.Domain.AggregatesModel.FileInfoAggregate.IFileInfoRepository)">
+            <summary>
+            按类别清理文件
+            </summary>
+            <param name="tag">文件类别</param>
+            <param name="repository"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FileService.File.API.Application.Services.CleanService.DeleteFile(System.String,FileService.File.Domain.AggregatesModel.FileInfoAggregate.FileTag)">
+            <summary>
+            从磁盘删除文件
+            </summary>
+            <param name="name">文件名</param>
+            <param name="tag">文件类别</param>
+            <returns>删除成功返回true，否则返回false</returns>
+        </member>
+        <member name="M:FileService.File.API.Application.Services.CleanService.ScheduleTask(System.Int32,System.Int32,System.Double,System.Action)">
+            <summary>
+            在指定时间以指定间隔重复执行一个任务
+            </summary>
+            <param name="hour">任务开始执行的时间点（小时）</param>
+            <param name="min">任务开始执行的时间点（分钟）</param>
+            <param name="intervalHours">重复执行间隔</param>
+            <param name="task">要执行的任务</param>
+        </member>
     </members>
 </doc>

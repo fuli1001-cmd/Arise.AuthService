@@ -27,12 +27,12 @@ namespace FileService.File.Domain.AggregatesModel.FileInfoAggregate
 
     public enum FileTag
     {
-        App,
-        AppThumbnail,
-        AppVideo,
-        AppOriginal,
-        Chat,
-        ChatThumbnail,
-        ChatVideo
+        App, // app使用的中等大小图片
+        AppThumbnail, // app使用的缩略图
+        AppVideo, // app使用的视频
+        AppOriginal, // app使用的原图
+        Chat, // 聊天产生的中等大小图片
+        ChatThumbnail, // 聊天产生的缩略图
+        ChatVideo // 聊天视频
     }
 }

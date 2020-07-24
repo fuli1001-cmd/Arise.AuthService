@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +17,10 @@ namespace FileService.File.API
     {
         public static readonly string Namespace = typeof(Program).Namespace;
         public static readonly string AppName = Namespace.Substring(Namespace.LastIndexOf('.', Namespace.LastIndexOf('.') - 1) + 1);
+
+        public static ManualResetEvent CleanAppMre = new ManualResetEvent(true);
+        public static ManualResetEvent CleanChatMre = new ManualResetEvent(true);
+        public static ManualResetEvent StreamingMre = new ManualResetEvent(true);
 
         public static void Main(string[] args)
         {
