@@ -18,11 +18,11 @@ using AuthService.Application.Commands.RegisterUserName;
 using Microsoft.OpenApi.Models;
 using Arise.DDD.API.Filters;
 using AuthService.Quickstart;
-using AuthService.Application.Behaviors;
 using IdentityServer4.Models;
 using IdentityServer4;
 using Arise.DDD.Infrastructure.Extensions;
 using System.Reflection;
+using Arise.DDD.API.Behaviors;
 
 namespace AuthService
 {
@@ -75,6 +75,7 @@ namespace AuthService
             ConfigureIdentityServer(services);
 
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            //services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
 
             services.AddSwaggerGen(c =>
             {

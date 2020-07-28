@@ -1,4 +1,4 @@
-﻿using Arise.DDD.Infrastructure;
+﻿using Arise.DDD.Infrastructure.Data;
 using File.Infrastructure;
 using FileService.File.Domain.AggregatesModel.FileInfoAggregate;
 using Microsoft.EntityFrameworkCore;

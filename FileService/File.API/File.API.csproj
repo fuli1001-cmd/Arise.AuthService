@@ -11,7 +11,7 @@
     <DocumentationFile>.\File.API.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Arise.DDD.API" Version="1.0.8" />
+    <PackageReference Include="Arise.DDD.API" Version="1.1.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="JsonModelBinder" Version="2.1.1" />
     <PackageReference Include="MediatR" Version="8.0.1" />

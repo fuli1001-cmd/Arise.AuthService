@@ -11,5 +11,7 @@ namespace Arise.DDD.Infrastructure.Sms
         public string Domain { get; set; }
         public string Version { get; set; }
         public string Action { get; set; }
+        public string SignName { get; set; }
+        public string TemplateCode { get; set; }
     }
 }

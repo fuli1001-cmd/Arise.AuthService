@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Arise.DDD.Infrastructure
+namespace Arise.DDD.Infrastructure.Data
 {
     public class EfRepository<T, TC> : IRepository<T>
         where T : Entity, IAggregateRoot

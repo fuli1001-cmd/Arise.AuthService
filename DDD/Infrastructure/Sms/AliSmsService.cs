@@ -12,36 +12,41 @@ namespace Arise.DDD.Infrastructure.Sms
 {
     public class AliSmsService : ISmsService
     {
-        private readonly IOptionsSnapshot<SmsSettings> _smsSettings;
+        private readonly SmsSettings _smsSettings;
         private readonly ILogger<AliSmsService> _logger;
 
-        public AliSmsService(IOptionsSnapshot<SmsSettings> redisSettings, ILogger<AliSmsService> logger)
+        public AliSmsService(IOptionsSnapshot<SmsSettings> smsOptions, ILogger<AliSmsService> logger)
         {
-            _smsSettings = redisSettings ?? throw new ArgumentNullException(nameof(redisSettings));
+            _smsSettings = smsOptions?.Value ?? throw new ArgumentNullException(nameof(smsOptions));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public string SendSms(string phonenumber)
         {
             var code = new Random().Next(1111, 9999).ToString();
-            var msg = string.Format("您的验证码是:{0}", code);
 
-            IClientProfile profile = DefaultProfile.GetProfile("ap-southeast-1", _smsSettings.Value.Key, _smsSettings.Value.Secrect);
+            IClientProfile profile = DefaultProfile.GetProfile("cn-hangzhou", _smsSettings.Key, _smsSettings.Secrect);
             DefaultAcsClient client = new DefaultAcsClient(profile);
             CommonRequest request = new CommonRequest
             {
                 Method = MethodType.POST,
-                Domain = _smsSettings.Value.Domain,
-                Version = _smsSettings.Value.Version,
-                Action = _smsSettings.Value.Action
+                Domain = _smsSettings.Domain,
+                Version = _smsSettings.Version,
+                Action = _smsSettings.Action
             };
 
-            request.AddQueryParameters("To", phonenumber);
-            request.AddQueryParameters("Message", msg);
+            request.AddQueryParameters("PhoneNumbers", phonenumber);
+            request.AddQueryParameters("SignName", _smsSettings.SignName);
+            request.AddQueryParameters("TemplateCode", _smsSettings.TemplateCode);
+            request.AddQueryParameters("TemplateParam", "{\"code\":\"" + code + "\"}");
+
+            _logger.LogInformation("SmsSettings: {@SmsSettings}", _smsSettings);
+            _logger.LogInformation("SendSms request: {@request}", request);
+
             try
             {
                 CommonResponse response = client.GetCommonResponse(request);
-                _logger.LogInformation(response.Data);
+                _logger.LogInformation("SendSms response: {response}", response.Data);
             }
             catch (ServerException ex)
             {

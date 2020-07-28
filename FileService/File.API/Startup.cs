@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Arise.DDD.API.Behaviors;
 using Arise.DDD.API.Filters;
 using Arise.DDD.API.Response;
 using Arise.DDD.Infrastructure.Extensions;
 using Autofac;
 using File.Infrastructure;
-using FileService.File.API.Application.Behaviors;
 using FileService.File.API.Application.Commands.CreateFileInfo;
 using FileService.File.API.Application.Services;
 using FileService.File.API.Filters;
@@ -65,6 +65,7 @@ namespace FileService.File.API
             });
 
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
 
             services.AddSqlDataAccessServices<FileContext>(Configuration.GetConnectionString("FileConnection"), typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
 
