@@ -65,6 +65,13 @@
             <param name="command"></param>
             <returns></returns>
         </member>
+        <member name="M:AuthService.Controllers.RegisterController.GetUsersAsync(Arise.DDD.API.Paging.PagingParameters)">
+            <summary>
+            分页获取用户列表
+            </summary>
+            <param name="pagingParameters"></param>
+            <returns></returns>
+        </member>
         <member name="M:IdentityServer4.Quickstart.UI.AccountController.Login(System.String)">
             <summary>
             Entry point into the login workflow

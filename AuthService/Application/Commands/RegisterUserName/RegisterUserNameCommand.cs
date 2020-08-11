@@ -9,23 +9,14 @@ using System.Threading.Tasks;
 
 namespace AuthService.Application.Commands.RegisterUserName
 {
-    [DataContract]
     public class RegisterUserNameCommand : IRequest<bool>
     {
-        [DataMember]
-        [Required]
         public string UserName { get; set; }
 
-        [DataMember]
-        [Required]
         public string Password { get; set; }
 
-        [DataMember]
-        [Required]
         public string SecretQuestion { get; set; }
 
-        [DataMember]
-        [Required]
         public string SecretAnswer { get; set; }
 
     }

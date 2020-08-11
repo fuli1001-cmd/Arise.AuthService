@@ -1,10 +1,12 @@
 ﻿using Arise.DDD.API;
+using Arise.DDD.API.Paging;
 using Arise.DDD.API.Response;
 using AuthService.Application.Commands.ChangePassword;
 using AuthService.Application.Commands.RegisterPhone;
 using AuthService.Application.Commands.RegisterUserName;
 using AuthService.Application.Commands.ResetPassword;
 using AuthService.Application.Commands.ValidateUserName;
+using AuthService.Application.ViewModels;
 using AuthService.Data;
 using AuthService.Models;
 using MediatR;
@@ -172,5 +174,31 @@ namespace AuthService.Controllers
             return Ok(ResponseWrapper.CreateOkResponseWrapper(result));
         }
 
+        /// <summary>
+        /// 分页获取用户列表
+        /// </summary>
+        /// <param name="pagingParameters"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("users")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<PagedResponseWrapper>> GetUsersAsync([FromQuery] PagingParameters pagingParameters)
+        {
+            var queryableUsers = from u in _userManager.Users
+                                 .OrderBy(u => u.UserName)
+                                 .ThenBy(u => u.Id)
+                                 select new UserViewModel
+                                 {
+                                     Id = u.Id,
+                                     UserName = u.UserName,
+                                     Email = u.Email,
+                                     PhoneNumber = u.PhoneNumber,
+                                     Role = u.Role
+                                 };
+
+            var pagedUsers = await PagedList<UserViewModel>.ToPagedListAsync(queryableUsers, pagingParameters);
+
+            return Ok(PagedResponseWrapper.CreateOkPagedResponseWrapper(pagedUsers));
+        }
     }
 }
