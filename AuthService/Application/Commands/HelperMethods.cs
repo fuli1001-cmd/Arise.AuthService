@@ -55,6 +55,8 @@ namespace AuthService.Application.Commands
                 cnError = "密码错误";
             else if (enError.Contains("Passwords must have at least one digit"))
                 cnError = "密码至少包含一位数字";
+            else if (enError.Contains("Passwords must be at least 6 characters. Passwords must have at least one lowercase ('a'-'z')."))
+                cnError = "密码至少6位，且至少包含一个小写字母('a'-'z')";
 
             return cnError;
         }
