@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace IdentityServer4.Quickstart.UI
 {
@@ -30,6 +31,7 @@ namespace IdentityServer4.Quickstart.UI
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
+        private readonly IConfiguration _configuration;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -37,7 +39,8 @@ namespace IdentityServer4.Quickstart.UI
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
-            IEventService events)
+            IEventService events,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -45,6 +48,7 @@ namespace IdentityServer4.Quickstart.UI
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
             _events = events;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -199,7 +203,9 @@ namespace IdentityServer4.Quickstart.UI
                 return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
             }
 
-            return View("LoggedOut", vm);
+            //return View("LoggedOut", vm);
+            //return Redirect(vm.PostLogoutRedirectUri);
+            return Redirect(_configuration.GetValue<string>("IdentityServer:PostLogoutRedirectUris"));
         }
 
         [HttpGet]

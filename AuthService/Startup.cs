@@ -173,7 +173,7 @@ namespace AuthService
 
                     RedirectUris = Configuration.GetValue<string>("IdentityServer:RedirectUris").Split(" "),
                     //FrontChannelLogoutUri = "https://localhost:4001",
-                    //PostLogoutRedirectUris = { "https://localhost:4001" },
+                    //PostLogoutRedirectUris = { "http://localhost:5000" },
 
                     AllowOfflineAccess = true,
                     RefreshTokenUsage = TokenUsage.ReUse,
