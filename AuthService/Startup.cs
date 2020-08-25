@@ -179,6 +179,19 @@ namespace AuthService
                     RefreshTokenUsage = TokenUsage.ReUse,
 
                     AllowedScopes = scopes
+                },
+                new Client
+                {
+                    ClientId = "f76dfaaa-b34f-c600-da99-1d18f9625dbf",
+                    ClientName = "≤‚ ‘",
+
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets = { new Secret("585a3c0a-a7c1-71b0-8ad8-b4b3120d04a9".Sha256()) },
+
+                    AccessTokenLifetime = lifetime,
+                    IdentityTokenLifetime = lifetime,
+
+                    AllowedScopes = scopes
                 }
             };
 
