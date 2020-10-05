@@ -184,8 +184,8 @@ namespace AuthService
                 {
                     ClientId = "FC6E2833-5DA0-AF61-F371-6D013BB384E6",
                     ClientName = "名冠充值平台管理",
-
-                    RequireConsent = true,
+                                                                                                                
+                    RequireConsent = false,
                     AllowedGrantTypes = GrantTypes.Code,
                     ClientSecrets = { new Secret("84B20313-29C0-B9F7-4EA2-0DFA28C15803".Sha256()) },
 
