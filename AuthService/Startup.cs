@@ -182,11 +182,45 @@ namespace AuthService
                 },
                 new Client
                 {
+                    ClientId = "FC6E2833-5DA0-AF61-F371-6D013BB384E6",
+                    ClientName = "名冠充值平台管理",
+
+                    RequireConsent = true,
+                    AllowedGrantTypes = GrantTypes.Code,
+                    ClientSecrets = { new Secret("84B20313-29C0-B9F7-4EA2-0DFA28C15803".Sha256()) },
+
+                    AccessTokenLifetime = lifetime,
+                    IdentityTokenLifetime = lifetime,
+
+                    RedirectUris = Configuration.GetValue<string>("IdentityServer:RedirectUris").Split(" "),
+                    //FrontChannelLogoutUri = "https://localhost:4001",
+                    //PostLogoutRedirectUris = { "http://localhost:5000" },
+
+                    AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse,
+
+                    AllowedScopes = scopes
+                },
+                new Client
+                {
                     ClientId = "f76dfaaa-b34f-c600-da99-1d18f9625dbf",
-                    ClientName = "测试",
+                    ClientName = "江苏久雅",
 
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets = { new Secret("585a3c0a-a7c1-71b0-8ad8-b4b3120d04a9".Sha256()) },
+
+                    AccessTokenLifetime = lifetime,
+                    IdentityTokenLifetime = lifetime,
+
+                    AllowedScopes = scopes
+                },
+                new Client
+                {
+                    ClientId = "D24B382B-5A9F-6A48-9BB9-B980CAA664DE",
+                    ClientName = "福禄",
+
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets = { new Secret("C1E3C946-48FA-7611-3EC2-70CCD31548BC".Sha256()) },
 
                     AccessTokenLifetime = lifetime,
                     IdentityTokenLifetime = lifetime,
