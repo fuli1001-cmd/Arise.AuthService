@@ -226,6 +226,19 @@ namespace AuthService
                     IdentityTokenLifetime = lifetime,
 
                     AllowedScopes = scopes
+                },
+                new Client
+                {
+                    ClientId = "F10745CD-C8DF-683E-C57D-AA4E749B0690",
+                    ClientName = "¸£Â»2ºÅ",
+
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets = { new Secret("9f561e4c-d00e-780d-5975-c68d2b125947".Sha256()) },
+
+                    AccessTokenLifetime = lifetime,
+                    IdentityTokenLifetime = lifetime,
+
+                    AllowedScopes = scopes
                 }
             };
 
