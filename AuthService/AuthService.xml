@@ -14,6 +14,13 @@
             验证码
             </summary>
         </member>
+        <member name="M:AuthService.Areas.Identity.Pages.Account.RegisterModel.SendUserRegisteredEventAsync(System.String)">
+            <summary>
+            自定义代码，通知订阅了用户注册事件的服务
+            </summary>
+            <param name="userName"></param>
+            <returns></returns>
+        </member>
         <member name="M:AuthService.Controllers.RegisterController.CheckUserNameAsync(System.String)">
             <summary>
             检查用户名是否可用
