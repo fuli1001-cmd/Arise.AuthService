@@ -53,17 +53,17 @@ namespace AuthService.Areas.Identity.Pages.Account
         {
             [Required]
             [EmailAddress]
-            [Display(Name = "邮箱")]
+            [Display(Name = "閭")]
             public string Email { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "密码")]
+            [Display(Name = "瀵嗙爜")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "确认密码")]
+            [Display(Name = "纭瀵嗙爜")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
         }
@@ -121,7 +121,7 @@ namespace AuthService.Areas.Identity.Pages.Account
         }
 
         /// <summary>
-        /// 自定义代码，通知订阅了用户注册事件的服务
+        /// 鑷畾涔変唬鐮侊紝閫氱煡璁㈤槄浜嗙敤鎴锋敞鍐屼簨浠剁殑鏈嶅姟
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
