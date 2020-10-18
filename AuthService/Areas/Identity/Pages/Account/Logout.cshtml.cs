@@ -36,9 +36,9 @@ namespace AuthService.Areas.Identity.Pages.Account
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
 
-            return Redirect("~/Account/Logout");
+            var logoutId = this.Request.Query["logoutId"].ToString();
 
-            //var logoutId = this.Request.Query["logoutId"].ToString();
+            return Redirect($"~/Account/Logout?logoutId={logoutId}");
 
             //if (returnUrl != null)
             //{

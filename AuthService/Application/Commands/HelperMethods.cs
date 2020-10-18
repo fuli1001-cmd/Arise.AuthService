@@ -17,13 +17,11 @@ namespace AuthService.Application.Commands
         {
             var @event = new UserRegisteredEvent
             {
-                Id = user.Id,
+                UserId = user.Id,
                 UserName = user.UserName,
                 PhoneNumber = user.PhoneNumber,
                 Code = user.Code,
-                InvitingUserCode = user.InvitingUserCode,
-                SecretQuestion = user.SecretQuestion,
-                SecretAnswer = user.SecretAnswer
+                InvitingUserCode = user.InvitingUserCode
             };
             await messageSession.Publish(@event);
             
