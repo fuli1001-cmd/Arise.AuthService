@@ -1,43 +1,43 @@
-name: AuthService (Test)
+# name: AuthService (Test)
 
-on:
-  push:
-    branches:
-      - test
-    paths:
-      - 'AuthService/**'
-  pull_request:
-    branches:
-      - test
-    paths:
-      - 'AuthService/**'
+# on:
+#   push:
+#     branches:
+#       - test
+#     paths:
+#       - 'AuthService/**'
+#   pull_request:
+#     branches:
+#       - test
+#     paths:
+#       - 'AuthService/**'
       
-jobs:
-  cd:
-    runs-on: ubuntu-18.04
+# jobs:
+#   cd:
+#     runs-on: ubuntu-18.04
     
-    steps:
-      - uses: actions/checkout@v2
+#     steps:
+#       - uses: actions/checkout@v2
       
-      - name: Docker login
-        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+#       - name: Docker login
+#         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
         
-      - name: Build
-        run: docker build -f ./AuthService/Dockerfile -t arise-authservice .
+#       - name: Build
+#         run: docker build -f ./AuthService/Dockerfile -t arise-authservice .
         
-      - name: Tags
-        run: |
-          docker tag arise-authservice ${{ secrets.DOCKER_USER }}/arise-authservice:test
+#       - name: Tags
+#         run: |
+#           docker tag arise-authservice ${{ secrets.DOCKER_USER }}/arise-authservice:test
           
-      - name: Push
-        run: |
-          docker push ${{ secrets.DOCKER_USER }}/arise-authservice:test
+#       - name: Push
+#         run: |
+#           docker push ${{ secrets.DOCKER_USER }}/arise-authservice:test
           
-      - name: Deploy
-        uses: garygrossgarten/github-action-ssh@release
-        with:
-          #command: docker stack deploy --compose-file ~/photo/deploy/auth/docker-compose.yml --compose-file ~/photo/deploy/auth/docker-compose.override.yml auth
-          command: docker stack deploy --compose-file ~/recharge/docker-compose.yml --compose-file ~/recharge/docker-compose.override.yml recharge
-          host: ${{ secrets.TEST_SERVER }}
-          username: ${{ secrets.TEST_SERVER_USER }}
-          privateKey: ${{ secrets.ID_RSA }}
+#       - name: Deploy
+#         uses: garygrossgarten/github-action-ssh@release
+#         with:
+#           #command: docker stack deploy --compose-file ~/photo/deploy/auth/docker-compose.yml --compose-file ~/photo/deploy/auth/docker-compose.override.yml auth
+#           command: docker stack deploy --compose-file ~/recharge/docker-compose.yml --compose-file ~/recharge/docker-compose.override.yml recharge
+#           host: ${{ secrets.TEST_SERVER }}
+#           username: ${{ secrets.TEST_SERVER_USER }}
+#           privateKey: ${{ secrets.ID_RSA }}
